@@ -1,0 +1,48 @@
+/* Style for the calendar container */
+#calendar {
+  max-width: 900px;
+  margin: 10px auto;
+  border: 1px solid #ddd;
+  padding: 20px;
+}
+
+/* Change background color of the calendar header */
+.fc-toolbar {
+  background-color: #f4f4f4;
+  border-radius: 5px;
+}
+
+/* Style the day cells */
+.fc-daygrid-day {
+  background-color: #fdfdfd;
+  border: 1px solid #e0e0e0;
+  transition: background-color 0.3s;
+}
+
+/* Highlight on hover */
+.fc-daygrid-day:hover {
+  background-color: #f0f0f0;
+}
+
+/* Style event text */
+.fc-event {
+  font-size: 14px;
+  font-weight: bold;
+  color: #fff;
+  border-radius: 5px;
+  padding: 2px;
+}
+
+/* Custom color for events */
+.fc-event-green {
+  background-color: #28a745;
+}
+
+.fc-event-red {
+  background-color: #dc3545;
+}
+
+/* Style for today's date */
+.fc-day-today {
+  background-color: #e8f7ff !important;
+}
