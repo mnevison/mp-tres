@@ -17,11 +17,11 @@ def create_app():
     db.init_app(app)
     
 
-    from .routes import main as main_blueprint
-    from .auth import auth as auth_blueprint
+    from .views import views
+    from .auth import auth
 
-    app.register_blueprint(main_blueprint)
-    app.register_blueprint(auth_blueprint)
+    app.register_blueprint(views, url_prefix='/')
+    app.register_blueprint(auth, url_prefix='/')
 
     return app
 
