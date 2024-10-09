@@ -1,6 +1,9 @@
 import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
+
 
 if os.path.exists("env.py"):
     import env  # noqa
@@ -22,6 +25,9 @@ def create_app():
 
     app.register_blueprint(views, url_prefix='/views')
     app.register_blueprint(auth, url_prefix='/')
+
+    admin = Admin(app, name='Admin Panel', template_mode='bootstrap3')
+    
 
     return app
 
