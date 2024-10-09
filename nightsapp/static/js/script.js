@@ -16,6 +16,12 @@ document.addEventListener("DOMContentLoaded", function () {
         end: "2024-11-10",
         color: "green",
       },
+      {
+        title: "Peter Parker's Holiday",
+        start: "2024-10-10",
+        end: "2024-10-15",
+        color: "green",
+      },
     ],
   });
 
