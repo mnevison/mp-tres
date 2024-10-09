@@ -26,6 +26,9 @@ app.register_blueprint(views, url_prefix='/views')
 app.register_blueprint(auth, url_prefix='/')
 
 admin = Admin(app, name='Admin Panel', template_mode='bootstrap3')
+
+with app.app_context():
+    db.create_all()
     
 
 

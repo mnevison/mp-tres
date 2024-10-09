@@ -1,9 +1,6 @@
 import os
 from nightsapp import app
 
-
-
-
 if __name__ == "__main__":
     app.run(
         host=os.environ.get("IP", "0.0.0.0"),  

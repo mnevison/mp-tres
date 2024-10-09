@@ -1,7 +1,4 @@
 from . import db
-from flask_sqlalchemy import SQLAlchemy
-
-db = SQLAlchemy()
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -11,4 +8,4 @@ class User(db.Model):
     is_admin = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
-        return f'<User {self.username}>'
+        return f'<User {self.fname} {self.lname}>'
