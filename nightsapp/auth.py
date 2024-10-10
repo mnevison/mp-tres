@@ -12,12 +12,20 @@ def login():
 
 @auth.route("/register", methods=["GET", "POST"])
 def register():
+    print("Reached the register route") 
     if request.method == "POST":
+        print("Form submitted") 
         email = request.form.get("email")
         fname = request.form.get("fname")
         lname = request.form.get("lname")
         password1 = request.form.get("password1")
         password2 = request.form.get("password2")
+
+        print("Email:", email)
+        print("First Name:", fname)
+        print("Last Name:", lname)
+        print("Password1:", password1)
+        print("Password2:", password2)
 
         user = User.query.filter_by(email=email).first()
         if user:
@@ -35,7 +43,9 @@ def register():
         else:
             new_user = User(email=email, fname=fname, lname=lname, password=generate_password_hash(password1, method="sha256"))
             db.session.add(new_user)
+            print("User added to session, now committing...")
             db.session.commit()
+            print("User committed to database")
             login_user(new_user, remember=True)
             flash("New Account Created!", category="success")
             return redirect(url_for("views.calendar"))
