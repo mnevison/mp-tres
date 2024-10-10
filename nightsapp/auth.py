@@ -12,20 +12,20 @@ def login():
 
 @auth.route("/register", methods=["GET", "POST"])
 def register():
-    print("Reached the register route") 
+    print("Reached the register route") # debugging
     if request.method == "POST":
-        print("Form submitted") 
+        print("Form submitted") # debugging
         email = request.form.get("email")
         fname = request.form.get("fname")
         lname = request.form.get("lname")
         password1 = request.form.get("password1")
         password2 = request.form.get("password2")
 
-        print("Email:", email)
-        print("First Name:", fname)
-        print("Last Name:", lname)
-        print("Password1:", password1)
-        print("Password2:", password2)
+        print("Email:", email) # debugging
+        print("First Name:", fname) # debugging
+        print("Last Name:", lname) # debugging
+        print("Password1:", password1) # debugging
+        print("Password2:", password2) # debugging
 
         user = User.query.filter_by(email=email).first()
         if user:
