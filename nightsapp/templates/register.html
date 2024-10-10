@@ -1,6 +1,61 @@
 {% extends "base.html" %} {% block title %}Register User{% endblock %} {% block
 content %}
 
-<h1>register new user</h1>
+<h1>
+  <form method="POST">
+    <div class="mb-3">
+      <label for="email">Email address</label>
+      <input
+        type="email"
+        class="form-control"
+        id="email"
+        name="email"
+        placeholder="Enter Email"
+      />
+    </div>
+    <div class="mb-3">
+      <label for="fname">First Name</label>
+      <input
+        type="text"
+        class="form-control"
+        id="fname"
+        name="fname"
+        placeholder="Enter First Name"
+      />
+    </div>
+    <div class="mb-3">
+      <label for="lname" class="form-label">Surname</label>
+      <input
+        type="text"
+        class="form-control"
+        id="lname"
+        name="lname"
+        placeholder="Enter Surname"
+      />
+    </div>
+    <div class="mb-3">
+      <label for="password1" class="form-label">Password</label>
+      <input
+        type="password"
+        class="form-control"
+        id="password1"
+        name="password1"
+        placeholder="Enter Password"
+      />
+    </div>
+    <div class="mb-3">
+      <label for="password2" class="form-label">Confirm Password</label>
+      <input
+        type="password"
+        class="form-control"
+        id="password2"
+        name="password2"
+        placeholder="Confirm Password"
+      />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</h1>
 
 {% endblock %}
