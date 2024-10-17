@@ -29,17 +29,17 @@ def register():
 
         user = User.query.filter_by(email=email).first()
         if user:
-            flash("Email already registered.", category="error")
+            flash("Email already registered.", category="danger")
         elif len(email) <11:
-            flash("Minimum 10 characters required.", category="error")
+            flash("Minimum 10 characters required.", category="danger")
         elif len(fname) <2:
-            flash("Name too short.", category="error")
+            flash("Name too short.", category="danger")
         elif len(lname) <2:
-            flash("Name too short.", category="error")
+            flash("Name too short.", category="danger")
         elif password1 != password2:
-            flash("Passwords don't match.", category="error")
+            flash("Passwords don't match.", category="danger")
         elif len(password1) <7:
-            flash("Password too short, must be at least 7 characters. ", category="error")
+            flash("Password too short, must be at least 7 characters. ", category="danger")
         else:
             new_user = User(email=email, fname=fname, lname=lname, password=generate_password_hash(password1, method="pbkdf2:sha256"))
             db.session.add(new_user)

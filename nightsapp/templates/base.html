@@ -58,6 +58,23 @@
         </div>
       </div>
     </nav>
+
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %} {% for category, message in messages %}
+    <div
+      class="alert alert-{{ category }} alert-dismissible fade show"
+      role="alert"
+    >
+      {{ message }}
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
+    </div>
+    {% endfor %} {% endif %} {% endwith %}
+
     <div class="container">{% block content %} {% endblock %}</div>
 
     <script src="{{ url_for('static', filename='js/script.js')}}"></script>
@@ -67,6 +84,7 @@
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"
     ></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <!-- FullCalendar JS -->
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js"></script>
   </body>

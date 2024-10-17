@@ -5,6 +5,7 @@ from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from .database import db
 from .models import User
+from flask_login import LoginManager
 if os.path.exists("env.py"):
     import env  # noqa
 
@@ -24,6 +25,14 @@ with app.app_context():
 
 app.register_blueprint(views, url_prefix='/views')
 app.register_blueprint(auth, url_prefix='/')
+
+login_manager = LoginManager()
+login_manager.login_view = 'views.calendar'
+login_manager.init_app(app)
+
+@login_manager.user_loader
+def load_user(id):
+    return User.query.get(int(id))
 
 admin = Admin(app, name='Admin Panel', template_mode='bootstrap3')
 
