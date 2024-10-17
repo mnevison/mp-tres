@@ -41,7 +41,7 @@ def register():
         elif len(password1) <7:
             flash("Password too short, must be at least 7 characters. ", category="error")
         else:
-            new_user = User(email=email, fname=fname, lname=lname, password=generate_password_hash(password1, method="sha256"))
+            new_user = User(email=email, fname=fname, lname=lname, password=generate_password_hash(password1, method="pbkdf2:sha256"))
             db.session.add(new_user)
             print("User added to session, now committing...")
             db.session.commit()
