@@ -6,8 +6,24 @@ from flask_login import login_user, login_required, logout_user, current_user
 
 auth = Blueprint('auth', __name__)
 
-@auth.route("/")
+@auth.route("/", methods=["GET", "POST"])
 def login():
+    if request.method == "POST":
+        email = request.form.get("email")
+        password = request.form.get("password")
+
+        user = User.query.filter_by(email=email).first()
+        if user:
+            if check_password_hash(user.password, password):
+                flash("You're now logged in!", category="success")
+                login_user(user, remember=True)
+                return redirect(url_for("views.dashboard"))
+            else:
+                flash("Password incorrect", category="danger")
+        else:
+            flash("Email not recognized", category="danger")
+        return render_template("login.html", user=current_user)
+    
     return render_template ("login.html")
 
 @auth.route("/register", methods=["GET", "POST"])
@@ -48,7 +64,7 @@ def register():
             print("User committed to database")
             login_user(new_user, remember=True)
             flash("New Account Created!", category="success")
-            return redirect(url_for("views.calendar"))
+            return redirect(url_for("views.dashboard"))
 
 
 
