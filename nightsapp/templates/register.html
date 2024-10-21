@@ -11,6 +11,7 @@ content %}
         id="email"
         name="email"
         placeholder="Enter Email"
+        value="{{ email | default('') }}"
       />
     </div>
     <div class="mb-3">
@@ -21,6 +22,7 @@ content %}
         id="fname"
         name="fname"
         placeholder="Enter First Name"
+        value="{{ fname | default('') }}"
       />
     </div>
     <div class="mb-3">
@@ -31,6 +33,7 @@ content %}
         id="lname"
         name="lname"
         placeholder="Enter Surname"
+        value="{{ lname | default('') }}"
       />
     </div>
     <div class="mb-3">
