@@ -23,16 +23,66 @@ content %}
         <small>Priority: {{ task.priority }}</small><br />
         <small>Due Date: {{ task.due_date }}</small><br />
         <small>Status: {{ task.status }}</small>
+        <button
+          type="button"
+          class="btn btn-danger btn-sm float-end mx-2"
+          data-bs-toggle="modal"
+          data-bs-target="#confirmDeleteModal"
+          data-task-id="{{ task.id }}"
+        >
+          Complete
+        </button>
         <a
           href="{{ url_for('views.edit_task', task_id=task.id) }}"
           class="btn btn-success btn-sm float-end"
           >Edit</a
-        ><button class="btn btn-danger">Delete Task</button>
+        >
       </li>
       {% else %}
       <li class="list-group-item">No tasks available.</li>
       {% endfor %}
     </ul>
+
+    <div
+      class="modal fade"
+      id="confirmDeleteModal"
+      tabindex="-1"
+      aria-labelledby="confirmDeleteModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="confirmDeleteModalLabel">
+              Confirm Completion
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            Are you sure you want to complete this task? This action cannot be
+            undone.
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <form id="deleteForm" action="" method="POST">
+              <input type="hidden" name="task_id" id="task_id" value="" />
+              <button type="submit" class="btn btn-danger">Complete</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <div id="calendar" class="col-lg-6"></div>
 </div>
