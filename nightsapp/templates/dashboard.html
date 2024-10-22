@@ -2,11 +2,19 @@
 content %}
 
 <div class="row">
-    <div class="col-12 text-end mt-2">
-        <a href="{{ url_for('auth.logout') }}" class="btn btn-primary">Log Out</a>
-    </div>
+  <div class="col-6 text-start mt-2">
+    <a href="{{ url_for('views.task_form') }}" class="btn btn-primary"
+      >New Task</a
+    >
+  </div>
+  <div class="col-6 text-end mt-2">
+    <a href="{{ url_for('auth.logout') }}" class="btn btn-primary">Log Out</a>
+  </div>
 </div>
+
+<div class="row">
+  <div class="col-lg-6"></div>
+  <div id="calendar" class="col-lg-6"></div>
 </div>
-<div id="calendar"></div>
 
 {% endblock %}

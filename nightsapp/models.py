@@ -1,5 +1,7 @@
 from .database import db
 from flask_login import UserMixin
+from datetime import datetime
+from sqlalchemy import Enum
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -23,3 +25,20 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
         return f'<User {self.fname} {self.lname}>'
+
+class Task(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(200), nullable=False)
+    description = db.Column(db.Text, nullable=True)
+    status = db.Column(db.String(50), nullable=False, default="pending")
+    priority = db.Column(db.Enum('low', 'medium', 'high', name='priority_levels'), default='medium')
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, onupdate=datetime.utcnow)
+    start_date = db.Column(db.DateTime, nullable=True) 
+    due_date = db.Column(db.DateTime, nullable=True)
+
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user = db.relationship('User', backref=db.backref('tasks', lazy=True))
+    
+    def __repr__(self):
+        return f'<Task {self.title} by User {self.user_id}>'
