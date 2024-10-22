@@ -19,13 +19,11 @@ def login():
                 login_user(user, remember=True)
                 return redirect(url_for("views.dashboard"))
             else:
-                flash("Password incorrect", category="danger")
-        else:
-            flash("Email not recognized", category="danger")
-
-        return render_template("login.html", email=email)
-
-        return render_template ("login.html", user=current_user)
+                flash("Email or Password incorrect", category="danger")
+        
+            return render_template("login.html", email=email)
+            
+        return render_template("login.html", user=current_user)
     
     return render_template ("login.html")
 
