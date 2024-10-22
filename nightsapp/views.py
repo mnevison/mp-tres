@@ -41,3 +41,22 @@ def create_task():
     db.session.commit()
 
     return redirect(url_for("views.dashboard"))
+
+@views.route("/edit_task/<int:task_id>", methods=["GET", "POST"])
+@login_required
+def edit_task(task_id):
+    task = Task.query.get_or_404(task_id)
+    if request.method == "POST":
+        task.title = request.form["title"]
+        task.description = request.form["description"]
+        task.priority = request.form["priority"]
+        task.start_date = request.form["start_date"]
+        task.due_date = request.form["due_date"]
+        task.status = request.form["status"]
+
+        db.session.commit()
+
+        return redirect(url_for("views.dashboard"))
+
+
+    return render_template("edit_task.html", task=task)
