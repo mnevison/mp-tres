@@ -22,7 +22,10 @@ def login():
                 flash("Password incorrect", category="danger")
         else:
             flash("Email not recognized", category="danger")
-        return render_template("login.html", user=current_user)
+
+        return render_template("login.html", email=email)
+
+        return render_template ("login.html", user=current_user)
     
     return render_template ("login.html")
 

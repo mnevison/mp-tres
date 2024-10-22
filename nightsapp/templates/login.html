@@ -1,7 +1,7 @@
 {% extends "base.html" %} {% block title %} Login {% endblock %} {% block
 content %}
 
-<form method="POST">
+<form method="POST" action="{{ url_for('auth.login') }}">
   <div class="mb-3 mt-5">
     <label for="email" class="form-label">Email address</label>
     <input
@@ -10,16 +10,12 @@ content %}
       class="form-control"
       id="exampleInputEmail1"
       aria-describedby="emailHelp"
+      value="{{ email | default('') }}"
     />
   </div>
   <div class="mb-3">
     <label for="password" class="form-label">Password</label>
-    <input
-      type="password"
-      name="password"
-      class="form-control"
-      id="exampleInputPassword1"
-    />
+    <input type="password" name="password" class="form-control" id="password" />
   </div>
   <button type="submit" class="btn btn-primary">Login</button>
   <a href="{{ url_for('auth.register') }}" class="btn btn-secondary float-end"
