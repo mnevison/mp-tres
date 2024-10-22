@@ -7,7 +7,8 @@ views = Blueprint('views', __name__)
 
 @views.route("/dashboard", methods=["GET"])
 def dashboard():
-    return render_template ("dashboard.html")
+    tasks = Task.query.filter_by(user_id=current_user.id).all()
+    return render_template("dashboard.html", tasks=tasks)
 
 
 @views.route("/create_task", methods=["GET"])
