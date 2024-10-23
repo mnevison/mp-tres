@@ -88,18 +88,30 @@ content %}
 </div>
 
 <script>
-  let taskEvents = [
-    {% for task in tasks %}
-    {
-      title: "{{ task.title|escape }}",
-      start: "{{ task.start_date.strftime('%Y-%m-%dT%H:%M:%S') }}",
-      end: "{{ task.due_date.strftime('%Y-%m-%dT%H:%M:%S') }}",
-      description: "{{ task.description|escape }}"
-    },
-    {% endfor %}
-  ];
-</script>
+  document.addEventListener("DOMContentLoaded", function () {
+    let calendarEl = document.getElementById("calendar");
 
-<script src="{{ url_for('static', filename='js/calendar.js')}}"></script>
+    let taskEvents = [
+      {% for task in tasks %}
+      {
+        title: "{{ task.title|escape }}",
+        start: "{{ task.start_date.strftime('%Y-%m-%dT%H:%M:%S') }}",
+        end: "{{ task.due_date.strftime('%Y-%m-%dT%H:%M:%S') }}",
+        description: "{{ task.description|escape }}"
+      }{% if not loop.last %},{% endif %}
+      {% endfor %}
+    ];
+
+    let calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: "dayGridMonth",
+      events: taskEvents,
+      eventContent: function(arg) {
+        return { html: `<div>${arg.event.title}</div>` };
+      },
+    });
+
+    calendar.render();
+  });
+</script>
 
 {% endblock %}
