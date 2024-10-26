@@ -1,5 +1,5 @@
 # Import necessary modules and functions from Flask and Flask-Login
-from flask import Blueprint, render_template, request, redirect, url_for, jsonify
+from flask import Blueprint, render_template, request, redirect, url_for
 from flask_login import current_user, login_required
 from .models import Task
 from .database import db
@@ -90,23 +90,3 @@ def delete_task(task_id):
 
     # Redirect back to the dashboard after deletion
     return redirect(url_for("views.dashboard"))
-
-
-# Route to get task details for the calendar modal 
-@views.route("/task/<int:task_id", methods=["GET"])
-@login_required
-def get_tasks():
-    task = Task.query.get_or_404(task_id)
-
-    if task.user_id != current_user.id:
-        abort(403)
-    
-    return jsonify({
-
-        "title": task.title,
-        "description": task.description,
-        "priority": task.priority,
-        "start_date": task.start_date.strftime('%Y-%m-%dT%H:%M'),
-        "end_date": task.end_date.strftime('%Y-%m-%dT%H:%M'),
-        "status": task.status
-    })
