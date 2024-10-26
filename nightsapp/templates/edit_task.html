@@ -44,7 +44,7 @@ content %}
         class="form-control"
         id="start_date"
         name="start_date"
-        value="{{ task.start_date.strftime('%Y-%m-%d') }}"
+        value="{{ task.start_date.strftime('%Y-%m-%dT%H:%M') if task.start_date else '' }}"
       />
     </div>
     <div class="col-md-6 mb-3">
@@ -54,7 +54,7 @@ content %}
         class="form-control"
         id="due_date"
         name="due_date"
-        value="{{ task.due_date.strftime('%Y-%m-%d') }}"
+        value="{{ task.due_date.strftime('%Y-%m-%dT%H:%M') if task.due_date else '' }}"
         required
       />
     </div>
@@ -63,13 +63,14 @@ content %}
   <div class="mb-3">
     <label for="status" class="form-label">Status</label>
     <select class="form-select" id="status" name="status" required>
-        <option value="Not Started" {% if task.status == "Not Started" %} selected {% endif %}>Not Started</option>
-        <option value="In Progress" {% if task.status == "In Progress" %} selected {% endif %}>In Progress</option>
-        <option value="Completed" {% if task.status == "Completed" %} selected {% endif %}>Completed</option>
+      <option value="pending" {% if task.status == "pending" %} selected {% endif %}>Pending</option>
+      <option value="in-progress" {% if task.status == "in-progress" %} selected {% endif %}>In Progress</option>
+      <option value="completed" {% if task.status == "completed" %} selected {% endif %}>Completed</option>
     </select>
   </div>
 
   <button type="submit" class="btn btn-primary">Update</button>
+  <a href="{{ url_for('views.dashboard') }}" class="btn btn-secondary float-end">Cancel</a>
 </form>
 
 {% endblock %}
