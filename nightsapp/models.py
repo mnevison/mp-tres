@@ -50,7 +50,7 @@ class Holiday(db.Model):
     end_date = db.Column(db.DateTime, nullable=False)
     is_approved = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id', nullable=False))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def __repr__(self):
         return f"<UserHoliday {self.user_id} from {self.start_date} to {self.end_date}>"
