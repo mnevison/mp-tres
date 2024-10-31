@@ -1,8 +1,9 @@
 # Import necessary modules and functions from Flask and Flask-Login
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import current_user, login_required
 from .models import Task, Holiday
 from .database import db
+from datetime import datetime
 
 # Create a Blueprint for the views, allowing routes to be grouped
 views = Blueprint('views', __name__)
@@ -53,7 +54,7 @@ def create_task():
     return redirect(url_for("views.dashboard"))
 
 # Task editing route (GET/POST): Allows users to edit an existing task (requires login)
-@views.route("/edit_task/<int:task_id>", methods=["POST"])
+@views.route("/edit_task/<int:task_id>", methods=["GET", "POST"])
 @login_required
 def edit_task(task_id):
     # Retrieve the task by its ID, or return a 404 if not found
