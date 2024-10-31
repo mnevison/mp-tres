@@ -53,7 +53,7 @@ def create_task():
     return redirect(url_for("views.dashboard"))
 
 # Task editing route (GET/POST): Allows users to edit an existing task (requires login)
-@views.route("/edit_task/<int:task_id>", methods=["GET", "POST"])
+@views.route("/edit_task/<int:task_id>", methods=["POST"])
 @login_required
 def edit_task(task_id):
     # Retrieve the task by its ID, or return a 404 if not found
@@ -90,3 +90,35 @@ def delete_task(task_id):
 
     # Redirect back to the dashboard after deletion
     return redirect(url_for("views.dashboard"))
+
+
+@views.route("/request_holiday", methods=["GET", "POST"])
+@login_required
+def request_holiday():
+
+    start_date = request.form["start_date"]
+    end_date = request.form["end_date"]
+
+    try:
+        start_date = datetime.strptime(start_date_str, "%Y-%m-%dT%H:%M")
+        end_date = datetime.strptime(end_date_str, "%Y-%m-%dT%H:%M")
+
+        new_holiday = Holiday(
+            start_date=start_date,
+            end_date=end_date,
+            is_approved=False,
+            user_id=current_user.id
+        )
+
+        db.session.add(new_holiday)
+        db.session.commit()
+
+        flash("Holiday request submitted! Please await approval from admin", "success")
+        return redirect (url_for("views.dashboard"))
+
+    except ValueError:
+            flash("Invalid date format. Please use the correct format.", "error")
+            return redirect(url_for("views.request_holiday"))
+    
+    return render_template("request_holiday.html")
+    
