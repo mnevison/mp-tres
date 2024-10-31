@@ -1,7 +1,7 @@
 # Import necessary modules and functions from Flask and Flask-Login
 from flask import Blueprint, render_template, request, redirect, url_for
 from flask_login import current_user, login_required
-from .models import Task
+from .models import Task, Holiday
 from .database import db
 
 # Create a Blueprint for the views, allowing routes to be grouped
@@ -95,30 +95,30 @@ def delete_task(task_id):
 @views.route("/request_holiday", methods=["GET", "POST"])
 @login_required
 def request_holiday():
+    if request.method == "POST":
+        start_date_str = request.form.get("start_date")
+        end_date_str = request.form.get("end_date")
 
-    start_date = request.form["start_date"]
-    end_date = request.form["end_date"]
+        try:
+            start_date = datetime.strptime(start_date_str, "%Y-%m-%dT%H:%M")
+            end_date = datetime.strptime(end_date_str, "%Y-%m-%dT%H:%M")
 
-    try:
-        start_date = datetime.strptime(start_date_str, "%Y-%m-%dT%H:%M")
-        end_date = datetime.strptime(end_date_str, "%Y-%m-%dT%H:%M")
+            new_holiday = Holiday(
+                start_date=start_date,
+                end_date=end_date,
+                is_approved=False,
+                user_id=current_user.id
+            )
 
-        new_holiday = Holiday(
-            start_date=start_date,
-            end_date=end_date,
-            is_approved=False,
-            user_id=current_user.id
-        )
+            db.session.add(new_holiday)
+            db.session.commit()
 
-        db.session.add(new_holiday)
-        db.session.commit()
+            flash("Holiday request submitted! Please await approval from admin.", "success")
+            return redirect(url_for("views.dashboard"))
 
-        flash("Holiday request submitted! Please await approval from admin", "success")
-        return redirect (url_for("views.dashboard"))
-
-    except ValueError:
-            flash("Invalid date format. Please use the correct format.", "error")
+        except ValueError:
+            flash("Invalid date format. Please use the correct format.", "danger")
             return redirect(url_for("views.request_holiday"))
-    
+
     return render_template("request_holiday.html")
     
