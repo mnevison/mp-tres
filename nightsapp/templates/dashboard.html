@@ -84,29 +84,101 @@ content %}
       </div>
     </div>
   </div>
+
+  <div
+    class="modal fade"
+    id="holidayModal"
+    tabindex="-1"
+    aria-labelledby="holidayModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="holidayModalLabel">Holiday Details</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <h6 id="holidayTitle"></h6>
+          <p id="holidayDescription"></p>
+          <p>
+            <strong>Start Date:</strong> <span id="holidayStartDate"></span>
+          </p>
+          <p><strong>End Date:</strong> <span id="holidayEndDate"></span></p>
+          <p id="holidayStatus"></p>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div id="calendar" class="col-lg-6"></div>
 </div>
 
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    let calendarEl = document.getElementById("calendar");
+    document.addEventListener("DOMContentLoaded", function () {
+      let calendarEl = document.getElementById("calendar");
 
-    let taskEvents = [
-      {% for task in tasks %}
-      {
-        title: "{{ task.title|escape }}",
-        start: "{{ task.start_date.strftime('%Y-%m-%dT%H:%M:%S') }}",
-        end: "{{ task.due_date.strftime('%Y-%m-%dT%H:%M:%S') }}",
-        description: "{{ task.description|escape }}"
-      }{% if not loop.last %},{% endif %}
-      {% endfor %}
-    ];
+      let taskEvents = [
+        {% for task in tasks %}
+        {
+          title: "{{ task.title|escape }}",
+          start: "{{ task.start_date.strftime('%Y-%m-%dT%H:%M:%S') }}",
+          end: "{{ task.due_date.strftime('%Y-%m-%dT%H:%M:%S') }}",
+          description: "{{ task.description|escape }}"
+        }{% if not loop.last %},{% endif %}
+        {% endfor %}
+      ];
 
-    let calendar = new FullCalendar.Calendar(calendarEl, {
-      initialView: "dayGridMonth",
-      events: taskEvents,
-      eventContent: function(arg) {
-        return { html: `<div>${arg.event.title}</div>` };
+      let holidayEvents = [
+    {% for holiday in holidays %}
+    {
+      title: "{{ holiday.title|escape }}",
+      start: "{{ holiday.start_date.strftime('%Y-%m-%dT%H:%M:%S') }}",
+      end: "{{ holiday.end_date.strftime('%Y-%m-%dT%H:%M:%S') }}",
+      description: "Holiday: {{ holiday.description|escape }}{% if not holiday.is_approved %} (Pending Approval){% endif %}",
+      eventType: 'holiday',
+      backgroundColor: {% if holiday.is_approved %}"#28a745"{% else %}"#ffc107"{% endif %}
+    }{% if not loop.last %},{% endif %}
+    {% endfor %}
+  ];
+
+      let calendarEvents = taskEvents.concat(holidayEvents);
+
+      let calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: "dayGridMonth",
+        events: calendarEvents,
+        eventContent: function(arg) {
+          return { html: `<div>${arg.event.title} - ${arg.event.extendedProps.description}</div>` };
+        },
+
+        eventClick: function(info) {
+        document.getElementById('holidayModalLabel').innerText = info.event.title;
+        document.getElementById('holidayDescription').innerText = info.event.extendedProps.description;
+        document.getElementById('holidayStartDate').innerText = info.event.start.toLocaleString();
+        document.getElementById('holidayEndDate').innerText = info.event.end.toLocaleString();
+
+        if (info.event.extendedProps.description.includes('Pending Approval')) {
+          document.getElementById('holidayStatus').innerText = "Status: Pending Approval";
+        } else {
+          document.getElementById('holidayStatus').innerText = "Status: Approved";
+        }
+
+        let holidayModal = new bootstrap.Modal(document.getElementById('holidayModal'));
+        holidayModal.show();
       },
     });
 

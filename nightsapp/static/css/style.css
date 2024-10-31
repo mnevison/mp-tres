@@ -46,3 +46,7 @@
 .fc-day-today {
   background-color: #e8f7ff !important;
 }
+
+.fc-event {
+  cursor: pointer; /* Change cursor to pointer */
+}

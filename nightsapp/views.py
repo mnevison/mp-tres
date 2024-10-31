@@ -13,8 +13,10 @@ views = Blueprint('views', __name__)
 def dashboard():
     # Retrieve all tasks associated with the current user
     tasks = Task.query.filter_by(user_id=current_user.id).all()
-    # Render the dashboard template and pass the tasks to it
-    return render_template("dashboard.html", tasks=tasks)
+    
+    holidays = Holiday.query.all()
+    # Render the dashboard template and pass the tasks to it    
+    return render_template("dashboard.html", tasks=tasks, holidays=holidays)
 
 # Task form route (GET): Displays the form to create a new task (accessible only when logged in)
 @views.route("/create_task", methods=["GET"])
