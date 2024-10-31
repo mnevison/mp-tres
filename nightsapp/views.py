@@ -124,4 +124,34 @@ def request_holiday():
             return redirect(url_for("views.request_holiday"))
 
     return render_template("request_holiday.html")
+
+
+@views.route("/edit_holiday/<int:holiday_id>", methods=["GET", "POST"])
+@login_required
+def edit_holiday(holiday_id):
+    holiday = Holiday.query.get_or_404(holiday_id)
+
+    if request.method == "POST":
+        start_date = request.form.get("start_date")
+        end_date = request.form.get("end_date")
+                
+        if not start_date or not end_date:
+            flash("Start date and end date are required.", "danger")
+            return render_template("edit_holiday.html", holiday=holiday)
+
+        if start_date >= end_date:
+            flash("Start date must be before end date.", "danger")
+            return render_template("edit_holiday.html", holiday=holiday)
+
+        holiday.start_date = start_date
+        holiday.end_date = end_date
+
+        flash("Request Updated!", "success")
+        
+        db.session.commit()
+        return redirect(url_for("views.dashboard"))
+
+    return render_template("edit_holiday.html", holiday=holiday)
     
+
+

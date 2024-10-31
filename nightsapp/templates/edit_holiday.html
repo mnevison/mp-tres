@@ -1,0 +1,46 @@
+{% extends "base.html" %} {% block title %} Edit Holiday {% endblock %} {% block
+content %}
+
+<h1 class="text-center mt-2">Request Holiday</h1>
+
+<form
+  action="{{ url_for('views.edit_holiday', holiday_id=holiday.id) }}"
+  method="POST"
+>
+  <div class="row">
+    <div class="col-md-6 mb-3 mt-5">
+      <label for="start_date" class="form-label">Start Date</label>
+      <input
+        type="datetime-local"
+        class="form-control"
+        id="start_date"
+        name="start_date"
+        value="{{ holiday.start_date.strftime('%Y-%m-%dT%H:%M') if holiday.start_date else '' }}"
+        required
+      />
+    </div>
+    <div class="col-md-6 mb-3 mt-5">
+      <label for="end_date" class="form-label">End Date</label>
+      <input
+        type="datetime-local"
+        class="form-control"
+        id="end_date"
+        name="end_date"
+        value="{{ holiday.end_date.strftime('%Y-%m-%dT%H:%M') if holiday.end_date else '' }}"
+        required
+      />
+    </div>
+  </div>
+  <div class="row mt-5">
+    <div class="col">
+      <button type="submit" class="btn btn-primary">Update</button>
+      <a
+        href="{{ url_for('views.dashboard') }}"
+        class="btn btn-secondary float-end"
+        >Cancel</a
+      >
+    </div>
+  </div>
+</form>
+
+{% endblock %}

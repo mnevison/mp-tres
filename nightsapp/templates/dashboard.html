@@ -84,7 +84,7 @@ content %}
       </div>
     </div>
   </div>
-
+  {% for holiday in holidays %}
   <div
     class="modal fade"
     id="holidayModal"
@@ -113,6 +113,11 @@ content %}
           <p id="holidayStatus"></p>
         </div>
         <div class="modal-footer">
+          <a
+            href="{{ url_for('views.edit_holiday',holiday_id=holiday.id) }}"
+            class="btn btn-success"
+            >Edit Request</a
+          >
           <button
             type="button"
             class="btn btn-secondary"
@@ -124,6 +129,8 @@ content %}
       </div>
     </div>
   </div>
+
+  {% endfor %}
 
   <div id="calendar" class="col-lg-6"></div>
 </div>
