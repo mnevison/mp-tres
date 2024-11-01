@@ -1,7 +1,23 @@
 body {
-  background-color: #f5f5f5;
+  background-color: #f9f9f9;
   color: #333;
   font-family: Arial, sans-serif;
+}
+
+.navbar {
+  background-color: #3b5998 !important;
+}
+
+.nav-link {
+  color: #f9f9f9 !important;
+}
+
+.nav-header {
+  color: #f9f9f9;
+}
+
+.btn-primary {
+  background-color: #3b5998;
 }
 
 .container {
