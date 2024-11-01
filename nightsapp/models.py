@@ -11,7 +11,7 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String(300), nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
     is_active = db.Column(db.Boolean, default= True)
-    holidays = db.relationship('Holiday', backref='user', lazy=True)
+    holidays = db.relationship('Holiday', backref='owner', lazy=True)
 
     @property
     def is_authenticated(self):
@@ -52,6 +52,6 @@ class Holiday(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, onupdate=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-
+    
     def __repr__(self):
         return f"<UserHoliday {self.user_id} from {self.start_date} to {self.end_date}>"

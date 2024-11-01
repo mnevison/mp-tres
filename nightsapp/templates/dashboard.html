@@ -84,6 +84,7 @@ content %}
       </div>
     </div>
   </div>
+
   {% for holiday in holidays %}
   <div
     class="modal fade"
@@ -114,7 +115,7 @@ content %}
         </div>
         <div class="modal-footer">
           <a
-            href="{{ url_for('views.edit_holiday',holiday_id=holiday.id) }}"
+            href="{{ url_for('views.edit_holiday', holiday_id=holiday.id) }}"
             class="btn btn-success"
             >Edit Request</a
           >
@@ -149,60 +150,61 @@ content %}
 </div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      let calendarEl = document.getElementById("calendar");
-
+  document.addEventListener('DOMContentLoaded', function() {
       let taskEvents = [
-        {% for task in tasks %}
-        {
-          title: "{{ task.title|escape }}",
-          start: "{{ task.start_date.strftime('%Y-%m-%dT%H:%M:%S') }}",
-          end: "{{ task.due_date.strftime('%Y-%m-%dT%H:%M:%S') }}",
-          description: "{{ task.description|escape }}"
-        }{% if not loop.last %},{% endif %}
-        {% endfor %}
+          {% for task in tasks %}
+          {
+              title: "{{ task.title|escape }}",
+              start: "{{ task.start_date.strftime('%Y-%m-%dT%H:%M:%S') }}",
+              end: "{{ task.due_date.strftime('%Y-%m-%dT%H:%M:%S') }}",
+              extendedProps: {
+                  description: "{{ task.description|escape }}"
+              }
+          }{% if not loop.last %},{% endif %}
+          {% endfor %}
       ];
 
       let holidayEvents = [
-    {% for holiday in holidays %}
-    {
-      title: "{{ holiday.title|escape }}",
-      start: "{{ holiday.start_date.strftime('%Y-%m-%dT%H:%M:%S') }}",
-      end: "{{ holiday.end_date.strftime('%Y-%m-%dT%H:%M:%S') }}",
-      description: "Holiday: {{ holiday.description|escape }}{% if not holiday.is_approved %} (Pending Approval){% endif %}",
-      eventType: 'holiday',
-      backgroundColor: {% if holiday.is_approved %}"#28a745"{% else %}"#ffc107"{% endif %}
-    }{% if not loop.last %},{% endif %}
-    {% endfor %}
-  ];
+          {% for holiday in holidays %}
+          {
+              title: "{{ holiday.owner.fname }} {{ holiday.owner.lname }}'s Holiday",
+              start: "{{ holiday.start_date.strftime('%Y-%m-%dT%H:%M:%S') }}",
+              end: "{{ holiday.end_date.strftime('%Y-%m-%dT%H:%M:%S') }}",
+              extendedProps: {
+                  description: "Holiday: {{ holiday.description|escape }}{% if not holiday.is_approved %} (Pending Approval){% endif %}"
+              },
+              backgroundColor: {% if holiday.is_approved %}"#28a745"{% else %}"#ffc107"{% endif %}
+          }{% if not loop.last %},{% endif %}
+          {% endfor %}
+      ];
 
-      let calendarEvents = taskEvents.concat(holidayEvents);
+      let events = [...taskEvents, ...holidayEvents];
 
-      let calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: "dayGridMonth",
-        events: calendarEvents,
-        eventContent: function(arg) {
-          return { html: `<div>${arg.event.title} - ${arg.event.extendedProps.description}</div>` };
-        },
+      const calendarEl = document.getElementById('calendar');
+      const calendar = new FullCalendar.Calendar(calendarEl, {
+          initialView: 'dayGridMonth',
+          events: events,
+          eventContent: function(arg) {
 
-        eventClick: function(info) {
-        document.getElementById('holidayModalLabel').innerText = info.event.title;
-        document.getElementById('holidayDescription').innerText = info.event.extendedProps.description;
-        document.getElementById('holidayStartDate').innerText = info.event.start.toLocaleString();
-        document.getElementById('holidayEndDate').innerText = info.event.end.toLocaleString();
+              return {
+                  html: `${arg.event.title}`
+              };
+          },
+          eventClick: function(info) {
+              document.getElementById('holidayModalLabel').innerText = info.event.title;
+              document.getElementById('holidayDescription').innerText = info.event.extendedProps.description || "No description available";
+              document.getElementById('holidayStartDate').innerText = info.event.start ? info.event.start.toLocaleString() : "Not specified";
+              document.getElementById('holidayEndDate').innerText = info.event.end ? info.event.end.toLocaleString() : "Not specified";
 
-        if (info.event.extendedProps.description.includes('Pending Approval')) {
-          document.getElementById('holidayStatus').innerText = "Status: Pending Approval";
-        } else {
-          document.getElementById('holidayStatus').innerText = "Status: Approved";
-        }
+              const status = info.event.extendedProps.description.includes('Pending Approval') ? "Status: Pending Approval" : "Status: Approved";
+              document.getElementById('holidayStatus').innerText = status;
 
-        let holidayModal = new bootstrap.Modal(document.getElementById('holidayModal'));
-        holidayModal.show();
-      },
-    });
+              let holidayModal = new bootstrap.Modal(document.getElementById('holidayModal'));
+              holidayModal.show();
+          }
+      });
 
-    calendar.render();
+      calendar.render();
   });
 </script>
 

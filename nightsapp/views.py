@@ -15,8 +15,30 @@ def dashboard():
     tasks = Task.query.filter_by(user_id=current_user.id).all()
     
     holidays = Holiday.query.all()
+
+    holiday_events = [
+        {
+            'title': f"{holiday.owner.fname} {holiday.owner.lname} - {'Approved' if holiday.is_approved else 'Pending'}",
+            'start': holiday.start_date.isoformat(),
+            'end': holiday.end_date.isoformat(),
+            'allDay': True,
+            'color': 'green' if holiday.is_approved else 'orange'  # Set colors based on approval status
+        }
+        for holiday in holidays
+    ]
+
+    task_events = [
+        {
+            'title': task.title,
+            'start': task.start_date.isoformat() if task.start_date else datetime.now().isoformat(),
+            'end': task.due_date.isoformat() if task.due_date else datetime.now().isoformat(),
+            'allDay': True,  # Set according to your requirements
+            'color': 'blue'  # Set a color for task events
+        }
+        for task in tasks
+    ]
     # Render the dashboard template and pass the tasks to it    
-    return render_template("dashboard.html", tasks=tasks, holidays=holidays)
+    return render_template("dashboard.html", tasks=tasks, holidays=holidays, holiday_events=holiday_events, task_events=task_events)
 
 # Task form route (GET): Displays the form to create a new task (accessible only when logged in)
 @views.route("/create_task", methods=["GET"])
