@@ -152,6 +152,20 @@ def edit_holiday(holiday_id):
         return redirect(url_for("views.dashboard"))
 
     return render_template("edit_holiday.html", holiday=holiday)
+
+
+@views.route("/delete_holiday/<int:holiday_id>", methods=["POST"])
+@login_required
+def delete_holiday(holiday_id):
+    # Retrieve the holiday by its ID, or return a 404 if not found
+    holiday = Holiday.query.get_or_404(holiday_id)
+
+    # Delete the holiday from the database and commit the transaction
+    db.session.delete(holiday)
+    db.session.commit()
+
+    # Redirect back to the dashboard after deletion
+    return redirect(url_for("views.dashboard"))
     
 
 

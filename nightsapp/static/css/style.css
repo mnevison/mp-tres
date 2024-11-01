@@ -50,3 +50,25 @@
 .fc-event {
   cursor: pointer; /* Change cursor to pointer */
 }
+
+.modal-content {
+  border-radius: 10px;
+}
+
+.modal-header {
+  background-color: #f8f9fa;
+  border-bottom: none;
+}
+
+.modal-footer {
+  border-top: none;
+}
+
+.btn-danger {
+  background-color: #dc3545; /* Custom danger color */
+  border: none;
+}
+
+.btn-danger:hover {
+  background-color: #c82333; /* Darker on hover */
+}
