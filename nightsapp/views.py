@@ -32,8 +32,6 @@ def dashboard():
             'title': task.title,
             'start': task.start_date.isoformat() if task.start_date else datetime.now().isoformat(),
             'end': task.due_date.isoformat() if task.due_date else datetime.now().isoformat(),
-            'allDay': True,  # Set according to your requirements
-            'color': 'blue'  # Set a color for task events
         }
         for task in tasks
     ]
@@ -153,6 +151,10 @@ def request_holiday():
 def edit_holiday(holiday_id):
     holiday = Holiday.query.get_or_404(holiday_id)
 
+    if holiday.user_id != current_user.id:
+        flash("You are not authorized to edit this holiday request", "danger")
+        return redirect(url_for("views.dashboard"))
+
     if request.method == "POST":
         start_date = request.form.get("start_date")
         end_date = request.form.get("end_date")
@@ -181,6 +183,10 @@ def edit_holiday(holiday_id):
 def delete_holiday(holiday_id):
     # Retrieve the holiday by its ID, or return a 404 if not found
     holiday = Holiday.query.get_or_404(holiday_id)
+
+    if holiday.user_id != current_user.id:
+        flash("You are not authorized to delete this holiday request.", "danger")
+        return redirect(url_for("views.dashboard"))
 
     # Delete the holiday from the database and commit the transaction
     db.session.delete(holiday)
