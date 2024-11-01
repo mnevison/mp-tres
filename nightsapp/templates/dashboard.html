@@ -106,7 +106,6 @@ content %}
         </div>
         <div class="modal-body">
           <h6 id="holidayTitle"></h6>
-          <p id="holidayDescription"></p>
           <p>
             <strong>Start Date:</strong> <span id="holidayStartDate"></span>
           </p>
@@ -171,7 +170,9 @@ content %}
               start: "{{ holiday.start_date.strftime('%Y-%m-%dT%H:%M:%S') }}",
               end: "{{ holiday.end_date.strftime('%Y-%m-%dT%H:%M:%S') }}",
               extendedProps: {
-                  description: "Holiday: {{ holiday.description|escape }}{% if not holiday.is_approved %} (Pending Approval){% endif %}"
+                  description: "Holiday: {{ holiday.description|escape }}{% if not holiday.is_approved %} (Pending Approval){% endif %}",
+                  isDeclined: {% if holiday.is_declined %} true {% else %} false {% endif %},
+                  isApproved: {% if holiday.is_approved %} true {% else %} false {% endif %}
               },
               backgroundColor:
                 {% if holiday.is_approved %}
@@ -199,12 +200,20 @@ content %}
           },
           eventClick: function(info) {
               document.getElementById('holidayModalLabel').innerText = info.event.title;
-              document.getElementById('holidayDescription').innerText = info.event.extendedProps.description || "No description available";
               document.getElementById('holidayStartDate').innerText = info.event.start ? info.event.start.toLocaleString() : "Not specified";
               document.getElementById('holidayEndDate').innerText = info.event.end ? info.event.end.toLocaleString() : "Not specified";
 
-              const status = info.event.extendedProps.description.includes('Pending Approval') ? "Status: Pending Approval" : "Status: Approved";
+              let status;
+              if (info.event.extendedProps.isDeclined){
+                status = "Status: Declined";
+              } else if (info.event.extendedProps.description.includes('Pending Approval')){
+                status = "Status: Pending Approval";
+              } else {
+                status = "Status: Approved";
+              }
+
               document.getElementById('holidayStatus').innerText = status;
+
 
               let holidayModal = new bootstrap.Modal(document.getElementById('holidayModal'));
               holidayModal.show();
