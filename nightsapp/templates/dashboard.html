@@ -173,13 +173,14 @@ content %}
               extendedProps: {
                   description: "Holiday: {{ holiday.description|escape }}{% if not holiday.is_approved %} (Pending Approval){% endif %}"
               },
-              backgroundColor: {% if holiday.is_approved %}
-            "#28a745"
-            {% elif holiday.is_declined %}
-            "#dc3545"
-            {% else %}
-            "#ffc107"
-            {% endif %}
+              backgroundColor:
+                {% if holiday.is_approved %}
+                  "#28a745"
+                {% elif holiday.is_declined %}
+                  "#dc3545"
+                {% else %}
+                  "#ffc107"
+                {% endif %}
             }{% if not loop.last %},{% endif %}
             {% endfor %}
       ];

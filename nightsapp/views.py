@@ -19,11 +19,15 @@ def dashboard():
 
     holiday_events = [
         {
-            'title': f"{holiday.owner.fname} {holiday.owner.lname} - {'Approved' if holiday.is_approved else 'Pending'}",
+            'title': f"{holiday.owner.fname} {holiday.owner.lname} - {'Approved' if holiday.is_approved else 'Declined' if holiday.is_declined else 'Pending'}",
             'start': holiday.start_date.isoformat(),
             'end': holiday.end_date.isoformat(),
             'allDay': True,
-            'color': 'green' if holiday.is_approved else 'orange'  # Set colors based on approval status
+            'color': (
+                'green' if holiday.is_approved else
+                'red' if holiday.is_declined else
+                'orange' #if pending
+                )
         }
         for holiday in holidays
     ]
@@ -199,30 +203,26 @@ def delete_holiday(holiday_id):
 @views.route("/approve_holiday", methods=["GET", "POST"])
 @login_required
 def approve_holiday():
-    unapproved_holidays = Holiday.query.filter_by(is_approved=False).all()
-
     if request.method == "POST":
-        approved_ids = request.form.getlist("approve")
-        declined_ids = request.form.getlist("decline")
+        unapproved_holidays = Holiday.query.filter_by(is_approved=False, is_declined=False).all()
 
-        for holiday_id in approved_ids:
-            holiday = Holiday.query.get(holiday_id)
-            if holiday and holiday.id not in map(int, declined_ids): 
+        for holiday in unapproved_holidays:
+            holiday_action = request.form.get(f'holiday_action_{holiday.id}')
+            if holiday_action == 'approve':
                 holiday.is_approved = True
-                db.session.commit()
+                holiday.is_declined = False 
+            elif holiday_action == 'decline':
+                holiday.is_approved = False
+                holiday.is_declined = True 
 
-        for holiday_id in declined_ids:
-            holiday = Holiday.query.get(holiday_id)
-            if holiday and holiday.id not in map(int, approved_ids):
-                db.session.delete(holiday)
-                db.session.commit()
+            db.session.commit()
 
-        flash("Selected holidays have been updated.", "success")
-        return redirect(url_for("views.approve_holiday"))
+        flash("Holiday requests updated successfully.", "success")
+        return redirect(url_for("views.dashboard"))
 
-    print("Current working directory:", os.getcwd())
-    print("Available templates:", os.listdir('nightsapp/templates'))
+    unapproved_holidays = Holiday.query.filter_by(is_approved=False, is_declined=False).all()
     return render_template("approve_holiday.html", holidays=unapproved_holidays)
+
 
     
 

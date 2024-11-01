@@ -7,8 +7,7 @@
     <table class="table table-bordered table-striped">
       <thead class="table-primary">
         <tr>
-          <th scope="col">Approve</th>
-          <th scope="col">Decline</th>
+          <th scope="col">Action</th>
           <th scope="col">User</th>
           <th scope="col">Start Date</th>
           <th scope="col">End Date</th>
@@ -21,30 +20,26 @@
             <div class="form-check">
               <input
                 class="form-check-input"
-                type="checkbox"
-                name="approve"
-                value="{{ holiday.id }}"
+                type="radio"
+                name="holiday_action_{{ holiday.id }}"
+                value="approve"
                 id="approve{{ holiday.id }}"
               />
-              <label
-                class="form-check-label"
-                for="approve{{ holiday.id }}"
-              ></label>
+              <label class="form-check-label" for="approve{{ holiday.id }}"
+                >Approve</label
+              >
             </div>
-          </td>
-          <td>
             <div class="form-check">
               <input
                 class="form-check-input"
-                type="checkbox"
-                name="decline"
-                value="{{ holiday.id }}"
+                type="radio"
+                name="holiday_action_{{ holiday.id }}"
+                value="decline"
                 id="decline{{ holiday.id }}"
               />
-              <label
-                class="form-check-label"
-                for="decline{{ holiday.id }}"
-              ></label>
+              <label class="form-check-label" for="decline{{ holiday.id }}"
+                >Decline</label
+              >
             </div>
           </td>
           <td>{{ holiday.owner.fname }} {{ holiday.owner.lname }}</td>
