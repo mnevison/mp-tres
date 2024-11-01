@@ -128,24 +128,29 @@ def request_holiday():
         end_date_str = request.form.get("end_date")
 
         try:
+            # Ensure that both start_date_str and end_date_str are provided
             if not start_date_str or not end_date_str:
                 flash("Start date and end date are required.", "danger")
                 return render_template("request_holiday.html")
 
+            # Parse the dates from the provided strings
             start_date = datetime.strptime(start_date_str, "%Y-%m-%dT%H:%M")
             end_date = datetime.strptime(end_date_str, "%Y-%m-%dT%H:%M")
 
+            # Validate that the start date is before the end date
             if start_date >= end_date:
                 flash("Start date must be before end date.", "danger")
                 return render_template("request_holiday.html")
 
+            # Create a new holiday request
             new_holiday = Holiday(
                 start_date=start_date,
                 end_date=end_date,
-                is_approved=False,
+                is_approved=False, # Initial state is unapproved
                 user_id=current_user.id
             )
 
+            # Add the new holiday to the database and commit
             db.session.add(new_holiday)
             db.session.commit()
 
