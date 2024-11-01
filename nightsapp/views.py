@@ -152,7 +152,7 @@ def request_holiday():
 def edit_holiday(holiday_id):
     holiday = Holiday.query.get_or_404(holiday_id)
 
-    if holiday.user_id != current_user.id:
+    if not current_user.is_admin and holiday.user_id != current_user.id:
         flash("You are not authorized to edit this holiday request", "danger")
         return redirect(url_for("views.dashboard"))
 
@@ -185,7 +185,7 @@ def delete_holiday(holiday_id):
     # Retrieve the holiday by its ID, or return a 404 if not found
     holiday = Holiday.query.get_or_404(holiday_id)
 
-    if holiday.user_id != current_user.id:
+    if not current_user.is_admin and holiday.user_id != current_user.id:
         flash("You are not authorized to delete this holiday request.", "danger")
         return redirect(url_for("views.dashboard"))
 
@@ -219,10 +219,10 @@ def approve_holiday():
 
         flash("Selected holidays have been updated.", "success")
         return redirect(url_for("views.approve_holiday"))
-        
+
     print("Current working directory:", os.getcwd())
     print("Available templates:", os.listdir('nightsapp/templates'))
-    return render_template("approve_holidays.html", holidays=unapproved_holidays)
+    return render_template("approve_holiday.html", holidays=unapproved_holidays)
 
     
 
