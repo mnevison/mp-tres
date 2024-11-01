@@ -1,0 +1,61 @@
+{% extends "base.html" %} {% block title %} Approve Holiday Requests {% endblock
+%} {% block content %}
+
+<h2 class="my-4">Approve Holiday Requests</h2>
+<form method="POST">
+  <div class="table-responsive">
+    <table class="table table-bordered table-striped">
+      <thead class="table-primary">
+        <tr>
+          <th scope="col">Approve</th>
+          <th scope="col">Decline</th>
+          <th scope="col">User</th>
+          <th scope="col">Start Date</th>
+          <th scope="col">End Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for holiday in holidays %}
+        <tr>
+          <td>
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                name="approve"
+                value="{{ holiday.id }}"
+                id="approve{{ holiday.id }}"
+              />
+              <label
+                class="form-check-label"
+                for="approve{{ holiday.id }}"
+              ></label>
+            </div>
+          </td>
+          <td>
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                name="decline"
+                value="{{ holiday.id }}"
+                id="decline{{ holiday.id }}"
+              />
+              <label
+                class="form-check-label"
+                for="decline{{ holiday.id }}"
+              ></label>
+            </div>
+          </td>
+          <td>{{ holiday.user.fname }} {{ holiday.user.lname }}</td>
+          <td>{{ holiday.start_date.strftime('%Y-%m-%d') }}</td>
+          <td>{{ holiday.end_date.strftime('%Y-%m-%d') }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <button type="submit" class="btn btn-primary mt-3">Submit Changes</button>
+</form>
+
+{% endblock %}

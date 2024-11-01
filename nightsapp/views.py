@@ -4,6 +4,7 @@ from flask_login import current_user, login_required
 from .models import Task, Holiday
 from .database import db
 from datetime import datetime
+import os
 
 # Create a Blueprint for the views, allowing routes to be grouped
 views = Blueprint('views', __name__)
@@ -194,6 +195,35 @@ def delete_holiday(holiday_id):
 
     # Redirect back to the dashboard after deletion
     return redirect(url_for("views.dashboard"))
+
+@views.route("/approve_holiday", methods=["GET", "POST"])
+@login_required
+def approve_holiday():
+    unapproved_holidays = Holiday.query.filter_by(is_approved=False).all()
+
+    if request.method == "POST":
+        approved_ids = request.form.getlist("approve")
+        declined_ids = request.form.getlist("decline")
+
+        for holiday_id in approved_ids:
+            holiday = Holiday.query.get(holiday_id)
+            if holiday and holiday.id not in map(int, declined_ids): 
+                holiday.is_approved = True
+                db.session.commit()
+
+        for holiday_id in declined_ids:
+            holiday = Holiday.query.get(holiday_id)
+            if holiday and holiday.id not in map(int, approved_ids):
+                db.session.delete(holiday)
+                db.session.commit()
+
+        flash("Selected holidays have been updated.", "success")
+        return redirect(url_for("views.approve_holiday"))
+        
+    print("Current working directory:", os.getcwd())
+    print("Available templates:", os.listdir('nightsapp/templates'))
+    return render_template("approve_holidays.html", holidays=unapproved_holidays)
+
     
 
 
