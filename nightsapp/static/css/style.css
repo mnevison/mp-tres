@@ -85,3 +85,8 @@ body {
 .btn-danger:hover {
   background-color: #c82333; /* Darker on hover */
 }
+
+.logo {
+  max-width: 200px;
+  max-height: 200px;
+}
