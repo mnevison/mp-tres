@@ -1,7 +1,7 @@
 {% extends "base.html" %} {% block title %} Edit Holiday {% endblock %} {% block
 content %}
 
-<h1 class="text-center mt-2">Request Holiday</h1>
+<h1 class="text-center mt-2">Update Request</h1>
 
 <form
   action="{{ url_for('views.edit_holiday', holiday_id=holiday.id) }}"
