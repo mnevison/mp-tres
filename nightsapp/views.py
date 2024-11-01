@@ -175,7 +175,11 @@ def edit_holiday(holiday_id):
         holiday.start_date = start_date
         holiday.end_date = end_date
 
-        flash("Request Updated!", "success")
+        #reset approval back to pending when editing a holiday request, unless already pending
+        holiday.is_approved = False
+        holiday.is_declined = False
+
+        flash("Request Updated and sent for approval!", "success")
         
         db.session.commit()
         return redirect(url_for("views.dashboard"))
