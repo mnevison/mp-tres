@@ -128,8 +128,16 @@ def request_holiday():
         end_date_str = request.form.get("end_date")
 
         try:
+            if not start_date_str or not end_date_str:
+                flash("Start date and end date are required.", "danger")
+                return render_template("request_holiday.html")
+
             start_date = datetime.strptime(start_date_str, "%Y-%m-%dT%H:%M")
             end_date = datetime.strptime(end_date_str, "%Y-%m-%dT%H:%M")
+
+            if start_date >= end_date:
+                flash("Start date must be before end date.", "danger")
+                return render_template("request_holiday.html")
 
             new_holiday = Holiday(
                 start_date=start_date,
