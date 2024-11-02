@@ -169,7 +169,8 @@ content %}
                   description: "Holiday: {{ holiday.description|escape if holiday.description else '' }}{% if not holiday.is_approved %} (Pending Approval){% endif %}",
                   isDeclined: {% if holiday.is_declined %} true {% else %} false {% endif %},
                   isApproved: {% if holiday.is_approved %} true {% else %} false {% endif %},
-                  editUrl: "{{ url_for('views.edit_holiday', holiday_id=holiday.id) }}"
+                  editUrl: "{{ url_for('views.edit_holiday', holiday_id=holiday.id) }}",
+                  deleteUrl: "{{ url_for('views.delete_holiday', holiday_id=holiday.id) }}"
               },
               backgroundColor:
                 {% if holiday.is_approved %}
