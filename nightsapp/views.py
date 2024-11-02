@@ -213,7 +213,7 @@ def delete_holiday(holiday_id):
     # Delete the holiday from the database and commit the transaction
     db.session.delete(holiday)
     db.session.commit()
-
+    flash("Holiday request deleted successfully!", "success")
     # Redirect back to the dashboard after deletion
     return redirect(url_for("views.dashboard"))
 
