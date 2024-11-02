@@ -65,9 +65,11 @@ def create_task():
         due_date = request.form["due_date"]
         status = request.form["status"]
 
+        # convert to string for comparison 
         start_date_str = datetime.strftime(start_date, "%Y-%m-%d")
         due_date_str = datetime.strftime(due_date, "%Y-%m-%d")
 
+        # validation that due is not before start date
         if due_date_str < start_date_str:
             flash("Due date cannot be before the start date.", "danger")
             return render_template("create_task.html", title=title, description=description, priority=priority, start_date=start_date, due_date=due_date, status=status)
@@ -89,7 +91,7 @@ def create_task():
 
         # Redirect the user back to the dashboard after successful task creation
         return redirect(url_for("views.dashboard"))
-        
+
     # If request = GET, render empty create_task form
     return render_template("create_task.html")
 
@@ -108,6 +110,21 @@ def edit_task(task_id):
         task.start_date = request.form["start_date"]
         task.due_date = request.form["due_date"]
         task.status = request.form["status"]
+
+
+        start_date_str = datetime.strftime(start_date, "%Y-%m-%d")
+        due_date_str = datetime.strftime(due_date, "%Y-%m-%d")
+
+        if due_date_str < start_date_str:
+            flash("Due date cannot be before the start date.")
+            return render_template("edit_task.html", task=task)
+
+        task.title = title
+        task.description = description
+        task.priority = priority
+        task.start_date = start_date
+        task.due_date = due_date
+        task.status = status
 
         # Commit the changes to the database
         db.session.commit()
