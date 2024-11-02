@@ -61,13 +61,16 @@ def create_task():
         title = request.form["title"]
         description = request.form["description"]
         priority = request.form["priority"]
-        start_date = request.form["start_date"]
-        due_date = request.form["due_date"]
+        start_date_str = request.form["start_date"]
+        due_date_str = request.form["due_date"]
         status = request.form["status"]
 
-        # convert to string for comparison 
-        start_date_str = datetime.strftime(start_date, "%Y-%m-%d")
-        due_date_str = datetime.strftime(due_date, "%Y-%m-%d")
+        try:
+            start_date= datetime.fromisoformat(start_date_str)
+            due_date= datetime.fromisoformat(due_date_str)
+        except ValueError:
+            flash("Invalid date format.", "danger")
+            return render_template("create_task.html", task=task)
 
         # validation that due is not before start date
         if due_date_str < start_date_str:
@@ -120,7 +123,7 @@ def edit_task(task_id):
             return render_template("edit_task.html", task=task)
         # validates due date isn't before start date
         if due_date < start_date:
-            flash("Due date cannot be before the start date.")
+            flash("Due date cannot be before the start date.", "danger")
             return render_template("edit_task.html", task=task)
 
         task.title = title
