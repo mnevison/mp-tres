@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, session
-from .models import Users
+from .models import User
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
 from flask_login import login_user, login_required, logout_user, current_user
@@ -12,7 +12,7 @@ def login():
         email = request.form.get("email")
         password = request.form.get("password")
 
-        user = Users.query.filter_by(email=email).first()
+        user = User.query.filter_by(email=email).first()
         if user:
             if check_password_hash(user.password, password):
                 flash("Welcome back, {}!".format(user.fname), category="success")
@@ -37,7 +37,7 @@ def register():
         password2 = request.form.get("password2")
 
         # Perform validation checks
-        user = Users.query.filter_by(email=email).first()
+        user = User.query.filter_by(email=email).first()
         if user:
             flash("Email already registered.", category="danger")
         elif len(email) < 11:
@@ -52,7 +52,7 @@ def register():
             flash("Password too short, must be at least 7 characters.", category="danger")
         else:
             # Create and add the new user to the database
-            new_user = Users(email=email, fname=fname, lname=lname, password=generate_password_hash(password1, method="pbkdf2:sha256"))
+            new_user = User(email=email, fname=fname, lname=lname, password=generate_password_hash(password1, method="pbkdf2:sha256"))
             db.session.add(new_user)
             db.session.commit()
             login_user(new_user, remember=True)

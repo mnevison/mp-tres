@@ -3,7 +3,7 @@ from flask_login import UserMixin
 from datetime import datetime
 from sqlalchemy import Enum
 
-class Users(UserMixin, db.Model):
+class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     fname = db.Column(db.String(150), nullable=False)
     lname = db.Column(db.String(150), nullable=False)
@@ -39,7 +39,7 @@ class Task(db.Model):
     due_date = db.Column(db.DateTime, nullable=True)
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    user = db.relationship('Users', backref=db.backref('tasks', lazy=True))
+    user = db.relationship('User', backref=db.backref('tasks', lazy=True))
     
     def __repr__(self):
         return f'<Task {self.title} by User {self.user_id}>'
@@ -52,7 +52,7 @@ class Holiday(db.Model):
     is_declined = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, onupdate=datetime.utcnow)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     
     def __repr__(self):
         return f"<UserHoliday {self.user_id} from {self.start_date} to {self.end_date}>"

@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from .database import db
-from .models import Users
+from .models import User
 from flask_login import LoginManager
 if os.path.exists("env.py"):
     import env  # noqa
@@ -38,7 +38,7 @@ login_manager.init_app(app)
 
 @login_manager.user_loader
 def load_user(id):
-    return Users.query.get(int(id))
+    return User.query.get(int(id))
 
 
     
