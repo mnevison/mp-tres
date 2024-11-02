@@ -40,9 +40,6 @@ login_manager.init_app(app)
 def load_user(id):
     return User.query.get(int(id))
 
-admin = Admin(app, name='Admin Panel', template_mode='bootstrap3')
-
-print("Database URI:", app.config["SQLALCHEMY_DATABASE_URI"]) #debugging
 
     
 
