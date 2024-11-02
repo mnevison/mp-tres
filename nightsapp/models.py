@@ -52,7 +52,7 @@ class Holiday(db.Model):
     is_declined = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, onupdate=datetime.utcnow)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     
     def __repr__(self):
         return f"<UserHoliday {self.user_id} from {self.start_date} to {self.end_date}>"
