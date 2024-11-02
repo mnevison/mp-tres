@@ -166,11 +166,11 @@ content %}
       let holidayEvents = [
           {% for holiday in holidays %}
           {
-              title: "{{ holiday.owner.fname }} {{ holiday.owner.lname }}'s Holiday",
-              start: "{{ holiday.start_date.strftime('%Y-%m-%dT%H:%M:%S') }}",
-              end: "{{ holiday.end_date.strftime('%Y-%m-%dT%H:%M:%S') }}",
+              title: "{{ holiday.owner.fname if holiday.owner else 'Unknown' }} {{ holiday.owner.lname if holiday.owner else '' }}'s Holiday",
+              start: "{{ holiday.start_date.strftime('%Y-%m-%dT%H:%M:%S') if holiday.start_date else '' }}",
+              end: "{{ holiday.end_date.strftime('%Y-%m-%dT%H:%M:%S') if holiday.end_date else '' }}",
               extendedProps: {
-                  description: "Holiday: {{ holiday.description|escape }}{% if not holiday.is_approved %} (Pending Approval){% endif %}",
+                  description: "Holiday: {{ holiday.description|escape if holiday.description else '' }}{% if not holiday.is_approved %} (Pending Approval){% endif %}",
                   isDeclined: {% if holiday.is_declined %} true {% else %} false {% endif %},
                   isApproved: {% if holiday.is_approved %} true {% else %} false {% endif %}
               },
