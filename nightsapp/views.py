@@ -54,31 +54,44 @@ def task_form():
 @views.route("/create_task", methods=["POST"])
 @login_required
 def create_task():
-    # Retrieve form data submitted by the user
-    title = request.form["title"]
-    description = request.form["description"]
-    priority = request.form["priority"]
-    start_date = request.form["start_date"]
-    due_date = request.form["due_date"]
-    status = request.form["status"]
 
-    # Create a new task object with the provided form data
-    new_task = Task(
-        title=title,
-        description=description,
-        priority=priority,
-        start_date=start_date,
-        due_date=due_date,
-        status=status,
-        user_id=current_user.id  # Associate the task with the current user
-    )
+    if request.method == "POST":
 
-    # Add the new task to the database and commit the transaction
-    db.session.add(new_task)
-    db.session.commit()
+        # Retrieve form data submitted by the user
+        title = request.form["title"]
+        description = request.form["description"]
+        priority = request.form["priority"]
+        start_date = request.form["start_date"]
+        due_date = request.form["due_date"]
+        status = request.form["status"]
 
-    # Redirect the user back to the dashboard after successful task creation
-    return redirect(url_for("views.dashboard"))
+        start_date_str = datetime.strftime(start_date, "%Y-%m-%d")
+        due_date_str = datetime.strftime(due_date, "%Y-%m-%d")
+
+        if due_date_str < start_date_str:
+            flash("Due date cannot be before the start date.", "danger")
+            return render_template("create_task.html", title=title, description=description, priority=priority, start_date=start_date, due_date=due_date, status=status)
+
+        # Create a new task object with the provided form data
+        new_task = Task(
+            title=title,
+            description=description,
+            priority=priority,
+            start_date=start_date,
+            due_date=due_date,
+            status=status,
+            user_id=current_user.id  # Associate the task with the current user
+        )
+
+        # Add the new task to the database and commit the transaction
+        db.session.add(new_task)
+        db.session.commit()
+
+        # Redirect the user back to the dashboard after successful task creation
+        return redirect(url_for("views.dashboard"))
+        
+    # If request = GET, render empty create_task form
+    return render_template("create_task.html")
 
 # Task editing route (GET/POST): Allows users to edit an existing task (requires login)
 @views.route("/edit_task/<int:task_id>", methods=["GET", "POST"])
