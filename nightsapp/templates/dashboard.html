@@ -85,7 +85,6 @@ content %}
     </div>
   </div>
 
-  {% for holiday in holidays %}
   <div
     class="modal fade"
     id="holidayModal"
@@ -113,13 +112,12 @@ content %}
           <p id="holidayStatus"></p>
         </div>
         <div class="modal-footer">
-          <a
-            href="{{ url_for('views.edit_holiday', holiday_id=holiday.id) }}"
-            class="btn btn-success"
+          <a href="#" id="editHolidayLink" class="btn btn-success"
             >Edit Request</a
           >
           <form
-            action="{{ url_for('views.delete_holiday', holiday_id=holiday.id) }}"
+            id="deleteHolidayForm"
+            action="#"
             method="POST"
             class="d-inline"
           >
@@ -142,8 +140,6 @@ content %}
       </div>
     </div>
   </div>
-
-  {% endfor %}
 
   <div id="calendar" class="col-lg-6"></div>
 </div>
@@ -172,7 +168,8 @@ content %}
               extendedProps: {
                   description: "Holiday: {{ holiday.description|escape if holiday.description else '' }}{% if not holiday.is_approved %} (Pending Approval){% endif %}",
                   isDeclined: {% if holiday.is_declined %} true {% else %} false {% endif %},
-                  isApproved: {% if holiday.is_approved %} true {% else %} false {% endif %}
+                  isApproved: {% if holiday.is_approved %} true {% else %} false {% endif %},
+                  editUrl: "{{ url_for('views.edit_holiday', holiday_id=holiday.id) }}"
               },
               backgroundColor:
                 {% if holiday.is_approved %}
@@ -214,6 +211,8 @@ content %}
 
               document.getElementById('holidayStatus').innerText = status;
 
+              document.getElementById('editHolidayLink').href = info.event.extendedProps.editUrl;
+              document.getElementById('deleteHolidayForm').action = info.event.extendedProps.deleteUrl;
 
               let holidayModal = new bootstrap.Modal(document.getElementById('holidayModal'));
               holidayModal.show();
