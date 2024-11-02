@@ -104,18 +104,22 @@ def edit_task(task_id):
 
     # If the form is submitted (POST), update the task's attributes
     if request.method == "POST":
-        task.title = request.form["title"]
-        task.description = request.form["description"]
-        task.priority = request.form["priority"]
-        task.start_date = request.form["start_date"]
-        task.due_date = request.form["due_date"]
-        task.status = request.form["status"]
+        title = request.form["title"]
+        description = request.form["description"]
+        priority = request.form["priority"]
+        start_date_str = request.form["start_date"]
+        due_date_str = request.form["due_date"]
+        status = request.form["status"]
 
-
-        start_date_str = datetime.strftime(start_date, "%Y-%m-%d")
-        due_date_str = datetime.strftime(due_date, "%Y-%m-%d")
-
-        if due_date_str < start_date_str:
+        # converts str into datetime objects
+        try:
+            start_date= datetime.fromisoformat(start_date_str)
+            due_date= datetime.fromisoformat(due_date)
+        except ValueError:
+            flash("Invalid date format.", "danger")
+            return render_template("edit_task.html", task=task)
+        # validates due date isn't before start date
+        if due_date < start_date:
             flash("Due date cannot be before the start date.")
             return render_template("edit_task.html", task=task)
 
