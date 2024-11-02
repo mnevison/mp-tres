@@ -4,6 +4,10 @@ from datetime import datetime
 from sqlalchemy import Enum
 
 class User(UserMixin, db.Model):
+
+    __tablename__ = 'users'
+
+    
     id = db.Column(db.Integer, primary_key=True)
     fname = db.Column(db.String(150), nullable=False)
     lname = db.Column(db.String(150), nullable=False)
