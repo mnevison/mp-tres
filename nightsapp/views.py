@@ -114,7 +114,7 @@ def edit_task(task_id):
         # converts str into datetime objects
         try:
             start_date= datetime.fromisoformat(start_date_str)
-            due_date= datetime.fromisoformat(due_date)
+            due_date= datetime.fromisoformat(due_date_str)
         except ValueError:
             flash("Invalid date format.", "danger")
             return render_template("edit_task.html", task=task)
