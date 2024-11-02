@@ -7,7 +7,7 @@ with app.app_context():
     # db.session.add(admin_user)
     # db.session.commit()
 
-    user = User.query.filter_by(email="mnevison2@gmail.com").first()
+    user = User.query.filter_by(email="user@admin.com").first()
     if user:
         user.is_admin = True
         db.session.commit()

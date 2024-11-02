@@ -3,7 +3,7 @@ from flask_login import UserMixin
 from datetime import datetime
 from sqlalchemy import Enum
 
-class User(UserMixin, db.Model):
+class Users(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     fname = db.Column(db.String(150), nullable=False)
     lname = db.Column(db.String(150), nullable=False)
@@ -39,7 +39,7 @@ class Task(db.Model):
     due_date = db.Column(db.DateTime, nullable=True)
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    user = db.relationship('User', backref=db.backref('tasks', lazy=True))
+    user = db.relationship('Users', backref=db.backref('tasks', lazy=True))
     
     def __repr__(self):
         return f'<Task {self.title} by User {self.user_id}>'
