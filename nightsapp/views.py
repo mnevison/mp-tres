@@ -77,9 +77,9 @@ def create_task():
             flash("Due date cannot be before the start date.", "danger")
             return render_template("create_task.html", title=title, description=description, priority=priority, start_date=start_date, due_date=due_date, status=status)
         
-        # Check if the description is within the "safe" limit of 199 characters
-        if len(description) > 199:
-            flash("Description is too long. Maximum of 200 characters.", "danger")
+        # Check if the title is within the "safe" limit of 200 characters
+        if len(title) > 199:
+            flash("Title is too long. Maximum of 200 characters.", "danger")
             return render_template("create_task.html", title=title, description=description, priority=priority, start_date=start_date, due_date=due_date, status=status)
 
         # Create a new task object with the provided form data
@@ -130,6 +130,11 @@ def edit_task(task_id):
         if due_date < start_date:
             flash("Due date cannot be before the start date.", "danger")
             return render_template("edit_task.html", task=task)
+
+        # Check if the title is within the "safe" limit of 200 characters
+        if len(title) > 199:
+            flash("Title is too long. Maximum of 200 characters.", "danger")
+            return render_template("create_task.html", task=task)
 
         task.title = title
         task.description = description
