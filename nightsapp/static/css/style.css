@@ -1,3 +1,9 @@
+:root {
+  --text-nav-primary: #f9f9f9;
+  --text-nav-active: #3bc1bf;
+  --text-nav-hover: #5fd0ce;
+}
+
 body {
   background-color: #f9f9f9;
   color: #333;
@@ -9,11 +15,11 @@ body {
 }
 
 .nav-link {
-  color: #f9f9f9 !important;
+  color: var(--text-nav-primary) !important;
 }
 
 .nav-header {
-  color: #f9f9f9;
+  color: var(--text-nav-primary);
 }
 
 .btn-primary {
@@ -105,4 +111,13 @@ body {
 .logo {
   max-width: 200px;
   max-height: 200px;
+}
+
+.nav-link.active {
+  color: var(--text-nav-active) !important;
+  font-weight: 500;
+}
+
+.nav-link:hover {
+  color: var(--text-nav-hover) !important;
 }
