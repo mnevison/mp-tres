@@ -134,7 +134,7 @@ def edit_task(task_id):
         # Check if the title is within the "safe" limit of 200 characters
         if len(title) > 199:
             flash("Title is too long. Maximum of 200 characters.", "danger")
-            return render_template("create_task.html", task=task)
+            return render_template("edit_task.html", task=task)
 
         task.title = title
         task.description = description
