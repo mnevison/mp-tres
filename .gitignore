@@ -8,3 +8,4 @@ node_modules/
 .github/
 cloudinary_python.txt
 create_db.py
+create_admin.py
