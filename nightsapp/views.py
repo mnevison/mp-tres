@@ -52,6 +52,9 @@ def dashboard():
             'title': task.title,
             'start': task.start_date.isoformat() if task.start_date else datetime.now().isoformat(),
             'end': task.due_date.isoformat() if task.due_date else datetime.now().isoformat(),
+            'type': 'task',
+            'id': task.id,
+            'description': task.description,
         }
         for task in tasks
     ]
