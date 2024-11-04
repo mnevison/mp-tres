@@ -39,10 +39,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 document.addEventListener("DOMContentLoaded", function () {
   // Target the task completion button
-  const completeTaskButton = document.getElementById("deleteTaskButton");
-  const completeTaskForm = document.getElementById("deleteTaskForm");
+  const deleteTaskButton = document.getElementById("deleteTaskButton");
+  const deleteTaskForm = document.getElementById("deleteTaskForm");
 
-  completeTaskButton.addEventListener("click", function (event) {
+  deleteTaskButton.addEventListener("click", function (event) {
     // Prevent the default form submission
     event.preventDefault();
 
