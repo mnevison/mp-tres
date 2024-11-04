@@ -78,6 +78,53 @@ content %}
 
     <div
       class="modal fade"
+      id="taskModal"
+      tabindex="-1"
+      aria-labelledby="taskModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="taskModalLabel">Task Details</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <h6 id="taskTitle"></h6>
+            <p><strong>Start Date:</strong> <span id="taskStartDate"></span></p>
+            <p><strong>End Date:</strong> <span id="taskEndDate"></span></p>
+            <p id="taskDescription"></p>
+          </div>
+          <div class="modal-footer">
+            <a href="#" id="editTaskLink" class="btn btn-success">Edit Task</a>
+            <form id="deleteTaskForm" method="POST" class="d-inline">
+              <button
+                type="submit"
+                class="btn btn-danger"
+                onclick="return confirm('Are you sure you want to delete this task?');"
+              >
+                Delete Task
+              </button>
+            </form>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
       id="confirmDeleteModal"
       tabindex="-1"
       aria-labelledby="confirmDeleteModalLabel"
@@ -108,7 +155,7 @@ content %}
             >
               Cancel
             </button>
-            <form id="deleteForm" action="" method="POST">
+            <form id="deleteForm" method="POST">
               <input type="hidden" name="task_id" id="task_id" value="" />
               <button type="submit" class="btn btn-danger">Complete</button>
             </form>
@@ -148,12 +195,7 @@ content %}
           <a href="#" id="editHolidayLink" class="btn btn-success"
             >Edit Request</a
           >
-          <form
-            id="deleteHolidayForm"
-            action="#"
-            method="POST"
-            class="d-inline"
-          >
+          <form id="deleteHolidayForm" method="POST" class="d-inline">
             <button
               type="submit"
               class="btn btn-danger"
@@ -188,7 +230,6 @@ content %}
 
               extendedProps: {
                   type: 'task',
-                  id: "{{ task.id }}",
                   description: "{{ task.description|escape }}",
                   editUrl: "{{ url_for('views.edit_task', task_id=task.id) }}",
                   deleteUrl: "{{ url_for('views.delete_task', task_id=task.id) }}"
@@ -265,13 +306,13 @@ content %}
               document.getElementById('taskEndDate').innerText = info.event.end ? info.event.end.toLocaleString() : "Not specified";
               document.getElementById('taskDescription').innerText = info.event.extendedProps.description || "No description provided";
 
-              document.getElementById('editTaskLink').href = `{{ url_for('views.edit_task', task_id='') }}${info.event.id}`;
-              document.getElementById('deleteTaskForm').action = `{{ url_for('views.delete_task', task_id='') }}${info.event.id}`;
+              document.getElementById('editTaskLink').href = info.event.extendedProps.editUrl;
+              document.getElementById('deleteTaskForm').action = info.event.extendedProps.deleteUrl;
 
               let taskModal = new bootstrap.Modal(document.getElementById('taskModal'));
               taskModal.show();
              }
-          };
+          }
       });
 
       calendar.render();
