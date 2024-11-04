@@ -4,6 +4,7 @@ from flask_login import current_user, login_required
 from .models import Task, Holiday
 from .database import db
 from datetime import datetime
+from math import ceil
 import os
 
 # Create a Blueprint for the views, allowing routes to be grouped
@@ -12,9 +13,7 @@ views = Blueprint('views', __name__)
 # Dashboard route (GET): Displays a list of tasks for the logged-in user
 @views.route("/dashboard", methods=["GET"])
 def dashboard():
-    # Retrieve all tasks associated with the current user
-    tasks = Task.query.filter_by(user_id=current_user.id).all()
-    
+       
     holidays = Holiday.query.all()
 
     holiday_events = [
@@ -32,6 +31,22 @@ def dashboard():
         for holiday in holidays
     ]
 
+    # Retrieve all tasks associated with the current user
+    tasks = Task.query.filter_by(user_id=current_user.id).all()
+
+    # Pagination parameters
+    page = request.args.get('page', 1, type=int)
+    per_page = 3
+
+    # Retrieve tasks for the current user with pagination
+    task_query = Task.query.filter_by(user_id=current_user.id)
+    total_tasks = task_query.count()
+    total_pages = ceil(total_tasks / per_page)
+
+    # Only retrieve the tasks needed for the current page
+    tasks = task_query.order_by(Task.due_date).offset((page
+     - 1)* per_page).limit(per_page).all()
+
     task_events = [
         {
             'title': task.title,
@@ -41,7 +56,11 @@ def dashboard():
         for task in tasks
     ]
     # Render the dashboard template and pass the tasks to it    
-    return render_template("dashboard.html", tasks=tasks, holidays=holidays, holiday_events=holiday_events, task_events=task_events)
+    return render_template("dashboard.html",
+     tasks=tasks, holidays=holidays,
+      holiday_events=holiday_events,
+       task_events=task_events, page=page,
+       total_pages=total_pages)
 
 # Task form route (GET): Displays the form to create a new task (accessible only when logged in)
 @views.route("/create_task", methods=["GET"])
@@ -75,12 +94,18 @@ def create_task():
         # validation that due is not before start date
         if due_date_str < start_date_str:
             flash("Due date cannot be before the start date.", "danger")
-            return render_template("create_task.html", title=title, description=description, priority=priority, start_date=start_date, due_date=due_date, status=status)
+            return render_template("create_task.html",
+             title=title, description=description,
+              priority=priority, start_date=start_date,
+               due_date=due_date, status=status)
         
         # Check if the title is within the "safe" limit of 200 characters
         if len(title) > 199:
             flash("Title is too long. Maximum of 200 characters.", "danger")
-            return render_template("create_task.html", title=title, description=description, priority=priority, start_date=start_date, due_date=due_date, status=status)
+            return render_template("create_task.html",
+             title=title, description=description,
+              priority=priority, start_date=start_date,
+               due_date=due_date, status=status)
 
         # Create a new task object with the provided form data
         new_task = Task(

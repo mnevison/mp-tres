@@ -14,5 +14,6 @@
   },
   "files.autoSave": "off",
   "workbench.colorTheme": "Winter is Coming (Dark Black)",
-  "terminal.integrated.gpuAcceleration": "canvas"
+  "terminal.integrated.gpuAcceleration": "canvas",
+  "cSpell.words": ["Colour"]
 }
