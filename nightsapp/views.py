@@ -173,6 +173,7 @@ def edit_task(task_id):
         # Commit the changes to the database
         db.session.commit()
 
+        flash("Your task has been successfully updated!", "success")
         # Redirect back to the dashboard after updating the task
         return redirect(url_for("views.dashboard"))
 
