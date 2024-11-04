@@ -103,13 +103,15 @@ content %}
           <div class="modal-footer">
             <a href="#" id="editTaskLink" class="btn btn-success">Edit Task</a>
             <form id="deleteTaskForm" method="POST" class="d-inline">
-              <button
-                type="submit"
-                class="btn btn-danger"
-                onclick="return confirm('Are you sure you want to delete this task?');"
-              >
-                Delete Task
-              </button>
+              <form id="deleteTaskForm" method="POST" class="d-inline">
+                <button
+                  type="button"
+                  id="deleteTaskButton"
+                  class="btn btn-danger"
+                >
+                  <i class="bi bi-check-square-fill"></i> Complete Task
+                </button>
+              </form>
             </form>
             <button
               type="button"
@@ -197,9 +199,9 @@ content %}
           >
           <form id="deleteHolidayForm" method="POST" class="d-inline">
             <button
-              type="submit"
+              type="button"
+              id="deleteHolidayButton"
               class="btn btn-danger"
-              onclick="return confirm('Are you sure you want to delete this holiday?');"
             >
               <i class="bi bi-trash-fill"></i> Delete
             </button>

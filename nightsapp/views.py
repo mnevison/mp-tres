@@ -189,6 +189,7 @@ def delete_task(task_id):
     # Delete the task from the database and commit the transaction
     db.session.delete(task)
     db.session.commit()
+    flash("Task completed and removed.", "success")
 
     # Redirect back to the dashboard after deletion
     return redirect(url_for("views.dashboard"))
