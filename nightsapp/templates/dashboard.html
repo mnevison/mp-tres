@@ -185,8 +185,13 @@ content %}
               title: "{{ task.title|escape }}",
               start: "{{ task.start_date.strftime('%Y-%m-%dT%H:%M:%S') }}",
               end: "{{ task.due_date.strftime('%Y-%m-%dT%H:%M:%S') }}",
+
               extendedProps: {
-                  description: "{{ task.description|escape }}"
+                  type: 'task',
+                  id: "{{ task.id }}",
+                  description: "{{ task.description|escape }}",
+                  editUrl: "{{ url_for('views.edit_task', task_id=task.id) }}",
+                  deleteUrl: "{{ url_for('views.delete_task', task_id=task.id) }}"
               }
           }{% if not loop.last %},{% endif %}
           {% endfor %}
@@ -198,6 +203,7 @@ content %}
               title: "{{ holiday.owner.fname if holiday.owner else 'Unknown' }} {{ holiday.owner.lname if holiday.owner else '' }}'s Holiday",
               start: "{{ holiday.start_date.strftime('%Y-%m-%dT%H:%M:%S') if holiday.start_date else '' }}",
               end: "{{ holiday.end_date.strftime('%Y-%m-%dT%H:%M:%S') if holiday.end_date else '' }}",
+              type : 'holiday',
               extendedProps: {
                   description: "Holiday: {{ holiday.description|escape if holiday.description else '' }}{% if not holiday.is_approved %} (Pending Approval){% endif %}",
                   isDeclined: {% if holiday.is_declined %} true {% else %} false {% endif %},
@@ -230,6 +236,8 @@ content %}
               };
           },
           eventClick: function(info) {
+
+            if (info.event.extendedProps.type === 'holiday') {
               document.getElementById('holidayModalLabel').innerText = info.event.title;
               document.getElementById('holidayStartDate').innerText = info.event.start ? info.event.start.toLocaleString() : "Not specified";
               document.getElementById('holidayEndDate').innerText = info.event.end ? info.event.end.toLocaleString() : "Not specified";
@@ -244,13 +252,26 @@ content %}
               }
 
               document.getElementById('holidayStatus').innerText = status;
-
               document.getElementById('editHolidayLink').href = info.event.extendedProps.editUrl;
               document.getElementById('deleteHolidayForm').action = info.event.extendedProps.deleteUrl;
 
               let holidayModal = new bootstrap.Modal(document.getElementById('holidayModal'));
               holidayModal.show();
-          }
+
+
+             } else if (info.event.extendedProps.type === 'task'){
+              document.getElementById('taskTitle').innerText = info.event.title;
+              document.getElementById('taskStartDate').innerText = info.event.start ? info.event.start.toLocaleString() : "Not specified";
+              document.getElementById('taskEndDate').innerText = info.event.end ? info.event.end.toLocaleString() : "Not specified";
+              document.getElementById('taskDescription').innerText = info.event.extendedProps.description || "No description provided";
+
+              document.getElementById('editTaskLink').href = `{{ url_for('views.edit_task', task_id='') }}${info.event.id}`;
+              document.getElementById('deleteTaskForm').action = `{{ url_for('views.delete_task', task_id='') }}${info.event.id}`;
+
+              let taskModal = new bootstrap.Modal(document.getElementById('taskModal'));
+              taskModal.show();
+             }
+          };
       });
 
       calendar.render();
