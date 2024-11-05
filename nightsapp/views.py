@@ -315,8 +315,3 @@ def approve_holiday():
 
     unapproved_holidays = Holiday.query.filter_by(is_approved=False, is_declined=False).all()
     return render_template("approve_holiday.html", holidays=unapproved_holidays)
-
-
-    
-
-
