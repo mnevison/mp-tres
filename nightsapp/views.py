@@ -88,27 +88,39 @@ def create_task():
         status = request.form["status"]
 
         try:
-            start_date= datetime.fromisoformat(start_date_str)
-            due_date= datetime.fromisoformat(due_date_str)
+            start_date = datetime.fromisoformat(start_date_str)
+            due_date = datetime.fromisoformat(due_date_str)
         except ValueError:
             flash("Invalid date format.", "danger")
-            return render_template("create_task.html", task=task)
+            return render_template("create_task.html",
+                title=title,
+                description=description,
+                priority=priority,
+                start_date=start_date_str,
+                due_date=due_date_str,
+                status=status)
 
         # validation that due is not before start date
-        if due_date_str < start_date_str:
+        if due_date < start_date:
             flash("Due date cannot be before the start date.", "danger")
             return render_template("create_task.html",
-             title=title, description=description,
-              priority=priority, start_date=start_date,
-               due_date=due_date, status=status)
-        
+                title=title,
+                description=description,
+                priority=priority,
+                start_date=start_date_str,
+                due_date=due_date_str,
+                status=status)
+
         # Check if the title is within the "safe" limit of 200 characters
         if len(title) > 199:
             flash("Title is too long. Maximum of 200 characters.", "danger")
             return render_template("create_task.html",
-             title=title, description=description,
-              priority=priority, start_date=start_date,
-               due_date=due_date, status=status)
+                title=title,
+                description=description,
+                priority=priority,
+                start_date=start_date_str,
+                due_date=due_date_str,
+                status=status)
 
         # Create a new task object with the provided form data
         new_task = Task(
