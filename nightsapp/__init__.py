@@ -24,6 +24,7 @@ db.init_app(app)
   
 from .views import views
 from .auth import auth
+from .errors import errors
 
 
 with app.app_context():
@@ -31,6 +32,7 @@ with app.app_context():
 
 app.register_blueprint(views, url_prefix='/views')
 app.register_blueprint(auth, url_prefix='/')
+app.register_blueprint(errors)
 
 login_manager = LoginManager()
 login_manager.login_view = 'views.dashboard'

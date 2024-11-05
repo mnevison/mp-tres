@@ -1,0 +1,21 @@
+{% extends "base.html" %} {% block title %} Error {{ error_number }} {% endblock
+%} {% block content %}
+
+<div class="d-flex align-items-center justify-content-center bg-light">
+  <div class="text-center">
+    <h2 class="mb-4">Oh No...</h2>
+    <img
+      src="{{ url_for('static', filename='images/error-img.png') }}"
+      alt="Michael Scott grimmace"
+      class="error-img mb-4"
+    />
+
+    <p>{{ error_message }}</p>
+    <p>
+      You can use the navigation links above, or go back to the
+      <a href="{{ url_for('auth.login' )}}" class="text-muted">login screen</a>
+    </p>
+  </div>
+</div>
+
+{% endblock %}
