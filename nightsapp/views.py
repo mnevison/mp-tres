@@ -12,6 +12,7 @@ views = Blueprint('views', __name__)
 
 # Dashboard route (GET): Displays a list of tasks for the logged-in user
 @views.route("/dashboard", methods=["GET"])
+@login_required
 def dashboard():
        
     holidays = Holiday.query.all()
