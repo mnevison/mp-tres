@@ -314,8 +314,8 @@ def delete_holiday(holiday_id):
 @login_required
 def approve_holiday():
     if request.method == "POST":
-        unapproved_holidays = Holiday.query.filter_by\
-        (is_approved=False, is_declined=False).all()
+        unapproved_holidays = Holiday.query.filter_by(is_approved=False,
+         is_declined=False).all()
 
         for holiday in unapproved_holidays:
             holiday_action = request.form.get(f'holiday_action_{holiday.id}')
