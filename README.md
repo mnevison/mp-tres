@@ -22,19 +22,25 @@ Link to deployed site: [Team Planner](https://nightsapp-mp3-95b6adbcde7b.herokua
   - [Database Schema & User Journey](#database-schema--user-journey)
 
     - [User Journey](#user-journey)
-
     - [Database Schema](#database-schema)
 
 - [Features](#features)
 
   - [Future Updates/Changes](#future-improvementschanges)
-
   - [Accessability](#accessibility)
 
 - [How It Was Built](#how-it-was-built)
 
   - [Languages Used](#languages-used)
-  - [Libraries, Websites & Programs Used](#libraries-websites--programs-used)
+  - [Databases](#databases)
+  - [Libraries & Packages](#libraries--packages)
+  - [Programs Used](#programs-used)
+    - [Flask Blueprints](#flask-blueprints)
+    - [Flask-Login](#flask-login)
+    - [Flask-SQLAlchemy & Database Models](#flask-sqlalchemy--database-models)
+    - [Defensive Programming](#defensive-programming)
+    - [Error Handling](#error-handling)
+    - [Task and Holiday Management](#task-and-holiday-management)
 
 - [Deployment & Local Development](#deployment--local-development)
 
@@ -43,15 +49,10 @@ Link to deployed site: [Team Planner](https://nightsapp-mp3-95b6adbcde7b.herokua
 
 - [Testing](#testing)
 
-  - [Solved Bugs](#solved-bugs)
-  - [Known Bugs](#known-bugs)
-  - [Issues](#issues)
-
 - [Credits](#credits)
 
   - [Code Used](#code-used)
   - [Page Content](#page-content)
-  - [Media](#media)
   - [Acknowledgements](#acknowledgements)
 
 ---
@@ -407,13 +408,13 @@ I have been mindful during coding to ensure that the website is as accessible fr
 
 ---
 
-## Flask Blueprints
+### Flask Blueprints
 
 In my project, I've utilized **Flask Blueprints** to logically organize and modularize the routes of my app. Blueprints allow me to separate the user authentication routes and the task/holiday-related routes into distinct sections. By organizing the code this way, it’s easier to maintain and scale the app as it grows. For example, all authentication-related routes are housed under the `auth` blueprint, and all task and holiday management routes are placed in the `views` blueprint. This way, my application is more manageable and follows a cleaner structure.
 
 ---
 
-## Flask-Login
+### Flask-Login
 
 For handling user authentication, I integrated **Flask-Login**, a powerful extension that simplifies session management. With Flask-Login, I can easily log users in, protect routes from unauthorized access, and manage the login state.
 
@@ -426,7 +427,7 @@ For handling user authentication, I integrated **Flask-Login**, a powerful exten
 
 ---
 
-## Flask-SQLAlchemy & Database Models
+### Flask-SQLAlchemy & Database Models
 
 I’ve used **Flask-SQLAlchemy** to interact with a relational database. The database stores users, tasks, and holiday requests. The database models are organized as follows:
 
@@ -440,7 +441,7 @@ With Flask-SQLAlchemy, I can easily query and manipulate the database, ensuring 
 
 ---
 
-## Defensive Programming
+### Defensive Programming
 
 **Defensive programming** is implemented throughout the application to prevent unauthorized users from making changes to data they do not own. For example, in the task and holiday management routes, I check whether the logged-in user is the one who created the task or holiday request before allowing any edits or deletions.
 
@@ -448,7 +449,7 @@ If a user tries to edit or delete a resource they don't own, a flash message is 
 
 ---
 
-## Error Handling
+### Error Handling
 
 To improve the user experience and make the app more resilient, I implemented **custom error handling** for common HTTP errors like 404 (Page Not Found) and 500 (Internal Server Error). Using a custom blueprint for error handling, I can customize how different errors are displayed to the user. This makes the application more user-friendly by showing specific messages and guidance when an error occurs.
 
@@ -459,10 +460,145 @@ For instance:
 
 ---
 
-## Task and Holiday Management
+### Task and Holiday Management
 
 The core of the app revolves around managing **tasks** and **holiday requests**:
 
 - **Task Management**: Users can create, edit, and delete tasks. Tasks have various attributes, such as title, description, status, priority, start date, and due date. Additionally, I’ve implemented pagination for the tasks displayed on the dashboard, ensuring that users can navigate through their tasks efficiently.
 
 - **Holiday Requests**: Users can request holidays by specifying the start and end dates. Admins are able to approve or decline these holiday requests. The app ensures that holidays cannot be requested with invalid dates, and it includes checks to ensure that the start date is before the end date.
+
+---
+
+## Deployment & Local Development
+
+### Deployment
+
+<summary>Heroku Deployment Instructions</summary>
+
+The site is deployed using Heroku. To deploy to Heroku:
+
+1. To successfully deploy on Heroku we first need to create some files: a requirements.txt file and a Procfile.
+
+2. The requirements.txt file contains all the applications and dependencies that are required to run the app. To create the requirements.txt file run the following command in the terminal:
+
+   ```bash
+   pip3 freeze --local > requirements.txt
+   ```
+
+3. The Procfile tells Heroku which files run the app and how to run it. To create the Procfile run the following command in the terminal:
+
+   ```bash
+   echo web: python run.py > Procfile
+   ```
+
+   NOTE: The Procfile uses a capital P and doesn't have a file extension on the end.
+
+4. If the Procfile has been created correctly it will have the Heroku logo next to it. It is also important to check the Procfile contents, as sometimes on creation a blank line will be added at the end of the file. This can sometimes cause problems when deploying to Heroku, so if the file contains a blank line at the end, delete this and save the file. Make sure to save both these files and then add, commit and push them to GitHub.
+
+5. Login (or sign up) to [Heroku.com](https://www.heroku.com).
+
+6. Click the new button and then click create new app.
+
+7. You will then be asked to give your app a name (these must be unique so you cannot reuse bookworm) and select a region. Once these are completed click create app.
+
+8. You will now need to connect the Heroku app to the GitHub repository for the site. Select GitHub in the deployment section, find the correct repository for the project and then click connect.
+
+9. Once the repository is connected, you will need to provide Heroku some config variables it needs to build the app. Click on the settings tab and then click reveal config vars button. You will now need to add the environment key/value variables that were used in the env.py file:
+
+   | KEY          | VALUE             |
+   | :----------- | :---------------- |
+   | IP           | 0.0.0.0           |
+   | PORT         | 5000              |
+   | SECRET_KEY   | YOUR_SECRET_KEY\* |
+   | DATABASE_URL | POSTGRES_DB\*     |
+   | DEBUG        | TRUE\*\*          |
+
+   \*Denotes a value that is specific to your app.
+
+   \*\*This is set to true to enable us to see any bugs on the live site. ~~Please change to FALSE after deployment.~~ It has been brought to my attention that by leaving the debug variable in my heroku config vars, even if it is saved as false, will actually cause it to be read as true. This is due to the config vars being saved as strings. Therefore it is better to delete this config var once you are done with debugging.
+
+10. You're now ready to click the enable automatic deploys and create button. Heroku will start building the app.
+
+11. As this project utilises a relational database, there are a few more steps to set this up.
+
+12. On the heroku dashboard go to resources tab and then select add-ons. You will need to search for and select heroku postgres. For this project the hobby dev free tier is fine.
+
+13. Go back into settings and reveal config vars. You should now see a new key called DATABASE_UL and the value should have been pre-populated.
+
+14. We will now need to go the more button on the dashboard and select run console. This is where we will set up the tables in the database we have just created.
+
+15. Type python3 and then once the python interpreter opens, we can run the following:
+
+    ```bash
+    from nightsapp import db
+    db.create_all()
+    exit()
+    ```
+
+16. Now that the relational database has been set up and the tables created, we can now click open app and the nightsapp application should now open in a new tab.
+</details>
+
+## Local Development
+
+#### How to Fork
+
+To fork the repository:
+
+1. Log in (or sign up) to Github.
+
+2. Go to the repository for this project, [Nightsapp](https://github.com/mnevison/mp-tres).
+
+3. Click the Fork button in the top right corner.
+
+#### How to Clone
+
+To clone the repository:
+
+1. Log in (or sign up) to GitHub.
+
+2. Go to the repository for this project, [Nightsapp](https://github.com/mnevison/mp-tres).
+
+3. Click on the code button, select whether you would like to clone with HTTPS, SSH or GitHub CLI and copy the link shown.
+
+4. Open the terminal in your code editor and change the current working directory to the location you want to use for the cloned directory.
+
+5. Type the following command in the terminal (after the git clone you will need to paste the link you copied in step 3 above):
+
+   ```bash
+   git clone { & THE LINK FROM STEP 3 }
+   ```
+
+6. Set up a virtual environment (this step is not required if you are using the Code Institute Template in GitPod as this will already be set up for you).
+
+7. Install the packages from the requirements.txt file by running the following command in the Terminal:
+
+   ```bash
+   pip3 install -r requirements.txt
+   ```
+
+---
+
+## Testing
+
+Please see [TESTING.md](TESTING.md) for all testing performed
+
+---
+
+## Credits
+
+### Code Used
+
+- [Tech With Tim - Flask Tutorial](https://www.youtube.com/watch?v=dam0GPOAvVI&t=25s) - This video was very helpful when I was getting started with the project as it helped me understand and implement the auth side of the app.
+- Relational DB Walkthrough via Code Institute - Prior to going ahead with the project, we did a walk through using flask. I referred back to the repo from this project again when getting up and running.
+
+### Page Content
+
+Content for this page was written by Mark Nevison.
+
+### Acknowledgements
+
+- [Darren](https://github.com/monkphin/) - Massive thanks for all the help with the project in general, but very much the DB guruing!
+- [Cameron](https://github.com/CamRaff) - Once again, being a massive bro - top notch sounding board!
+- Jubril Akolade - My Code Institute mentor.
+- UCP-15 Discord - For always providing feedback on my project.
