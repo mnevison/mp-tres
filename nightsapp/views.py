@@ -73,19 +73,19 @@ def task_form():
     return render_template("create_task.html")
 
 # Task creation route (POST): Processes the form submission to create a new task (requires login)
-@views.route("/create_task", methods=["POST"])
+@views.route("/create_task", methods=["POST", "GET"])
 @login_required
 def create_task():
 
     if request.method == "POST":
 
         # Retrieve form data submitted by the user
-        title = request.form["title"]
-        description = request.form["description"]
-        priority = request.form["priority"]
-        start_date_str = request.form["start_date"]
-        due_date_str = request.form["due_date"]
-        status = request.form["status"]
+        title = request.form.get("title")
+        description = request.form.get("description")
+        priority = request.form.get("priority")
+        start_date_str = request.form.get("start_date")
+        due_date_str = request.form.get("due_date")
+        status = request.form.get("status")
 
         try:
             start_date = datetime.fromisoformat(start_date_str)

@@ -12,6 +12,7 @@ content %}
       id="title"
       name="title"
       placeholder="Enter task title"
+      value=" {{ title | default('') }}"
       required
     />
   </div>
@@ -24,7 +25,9 @@ content %}
       name="description"
       rows="3"
       placeholder="Enter task description"
-    ></textarea>
+    >
+{{ description | default ('')}}</textarea
+    >
   </div>
 
   <div class="mb-3">
@@ -44,6 +47,7 @@ content %}
         class="form-control"
         id="start_date"
         name="start_date"
+        value="{{ start_date | default ('') }}"
       />
     </div>
     <div class="col-md-6 mb-3">
