@@ -299,13 +299,13 @@ I added some basic validation checks to the start & end dates to ensure the holi
 
 The holiday modal represents the main interactivity done on the holiday objects. A user can edit and delete requests via interacting with the specific request. The modal will also display the relevant content - in the case of a holiday that would be the start and end date.
 
-##### Edit Holiday
+#### Edit Holiday
 
 ![edit-holiday](docs/readme/edit-holiday.gif)
 
 Interacting with the object pops the model, and the edit button will sent the user to the edit_holiday page/route.
 
-##### Delete Holiday
+#### Delete Holiday
 
 ![delete-holiday](docs/readme/delete-holiday.gif)
 
@@ -325,8 +325,20 @@ if not current_user.is_admin and holiday.user_id != current_user.id:
 
 **_Admins can delete/update holiday requests regardless of user access restrictions_**
 
-##### Resubmit Required
+#### Resubmit Required
 
 ![resub](docs/readme/resubmit.gif)
 
 This is a feature I wanted to add, just based off of personal experience dealing with peoples holiday shenanigans. When a request that has already been dealt with by an admin (approved/declined) is edited in any way, it then is returned to pending and will require re-reviewing by an admin. This is to stop people from changing the dates on authorized holidays to something else mainly.
+
+### Approve Holiday (Admin Only)
+
+![admin-view](docs/readme/admin-view.png)
+
+This is the table that appears on the admin only route for Approve Holidays. However many holiday requests are pending will populate the table, and the admin can accept/decline them as appropriate! This will adjust the colour coding of the task in the calendar to represent approved/declined.
+
+### Error Handlers
+
+![error-handlers](docs/readme/error-handler.png)
+
+I've added some customer error handlers for common errors (401, 404 and 500) to deal with them in a more elegant way that just crashing the app.
