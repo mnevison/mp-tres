@@ -1,36 +1,40 @@
 # Import necessary modules and functions from Flask and Flask-Login
+import os
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import current_user, login_required
 from .models import Task, Holiday
 from .database import db
 from datetime import datetime
 from math import ceil
-import os
 
 # Create a Blueprint for the views, allowing routes to be grouped
 views = Blueprint('views', __name__)
+
 
 # Dashboard route (GET): Displays a list of tasks for the logged-in user
 @views.route("/dashboard", methods=["GET"])
 @login_required
 def dashboard():
-       
+
     holidays = Holiday.query.all()
 
-    holiday_events = [
-        {
-            'title': f"{holiday.owner.fname} {holiday.owner.lname} - {'Approved' if holiday.is_approved else 'Declined' if holiday.is_declined else 'Pending'}",
+    holiday_events = []
+    for holiday in holidays:
+        status = (
+            'Approved' if holiday.is_approved else
+            'Declined' if holiday.is_declined else 'Pending'
+            )
+        color = (
+            'green' if holiday.is_approved else
+            'red' if holiday.is_declined else 'orange'
+            )
+        holiday_events.append({
+            'title': f"{holiday.owner.fname} {holiday.owner.lname} - {status}",
             'start': holiday.start_date.isoformat(),
             'end': holiday.end_date.isoformat(),
             'allDay': True,
-            'color': (
-                'green' if holiday.is_approved else
-                'red' if holiday.is_declined else
-                'orange' #if pending
-                )
-        }
-        for holiday in holidays
-    ]
+            'color': color,
+        })
 
     # Retrieve all tasks associated with the current user
     tasks = Task.query.filter_by(user_id=current_user.id).all()
@@ -46,33 +50,39 @@ def dashboard():
 
     # Only retrieve the tasks needed for the current page
     tasks = task_query.order_by(Task.due_date).offset((page
-     - 1)* per_page).limit(per_page).all()
+                        - 1) * per_page).limit(per_page).all()
 
     task_events = [
         {
             'title': task.title,
-            'start': task.start_date.isoformat() if task.start_date else datetime.now().isoformat(),
-            'end': task.due_date.isoformat() if task.due_date else datetime.now().isoformat(),
+            'start': task.start_date.isoformat() if task.start_date else
+            datetime.now().isoformat(),
+            'end': task.due_date.isoformat() if task.due_date else
+            datetime.now().isoformat(),
             'type': 'task',
             'description': task.description,
         }
         for task in tasks
     ]
-    # Render the dashboard template and pass the tasks to it    
+    # Render the dashboard template and pass the tasks to it
     return render_template("dashboard.html",
-     tasks=tasks, holidays=holidays,
-      holiday_events=holiday_events,
-       task_events=task_events, page=page,
-       total_pages=total_pages)
+                           tasks=tasks, holidays=holidays,
+                           holiday_events=holiday_events,
+                           task_events=task_events, page=page,
+                           total_pages=total_pages)
 
-# Task form route (GET): Displays the form to create a new task (accessible only when logged in)
+
+# Task form route (GET): Displays the form
+# to create a new task (accessible only when logged in)
 @views.route("/create_task", methods=["GET"])
 @login_required
 def task_form():
     # Render the create task form template
     return render_template("create_task.html")
 
-# Task creation route (POST): Processes the form submission to create a new task (requires login)
+
+# Task creation route (POST): Processes the form
+# submission to create a new task (requires login)
 @views.route("/create_task", methods=["POST", "GET"])
 @login_required
 def create_task():
@@ -93,34 +103,34 @@ def create_task():
         except ValueError:
             flash("Invalid date format.", "danger")
             return render_template("create_task.html",
-                title=title,
-                description=description,
-                priority=priority,
-                start_date=start_date_str,
-                due_date=due_date_str,
-                status=status)
+                                   title=title,
+                                   description=description,
+                                   priority=priority,
+                                   start_date=start_date_str,
+                                   due_date=due_date_str,
+                                   status=status)
 
         # validation that due is not before start date
         if due_date < start_date:
             flash("Due date cannot be before the start date.", "danger")
             return render_template("create_task.html",
-                title=title,
-                description=description,
-                priority=priority,
-                start_date=start_date_str,
-                due_date=due_date_str,
-                status=status)
+                                   title=title,
+                                   description=description,
+                                   priority=priority,
+                                   start_date=start_date_str,
+                                   due_date=due_date_str,
+                                   status=status)
 
         # Check if the title is within the "safe" limit of 200 characters
         if len(title) > 199:
             flash("Title is too long. Maximum of 200 characters.", "danger")
             return render_template("create_task.html",
-                title=title,
-                description=description,
-                priority=priority,
-                start_date=start_date_str,
-                due_date=due_date_str,
-                status=status)
+                                   title=title,
+                                   description=description,
+                                   priority=priority,
+                                   start_date=start_date_str,
+                                   due_date=due_date_str,
+                                   status=status)
 
         # Create a new task object with the provided form data
         new_task = Task(
@@ -137,13 +147,16 @@ def create_task():
         db.session.add(new_task)
         db.session.commit()
 
-        # Redirect the user back to the dashboard after successful task creation
+        # Redirect the user back to the dashboard
+        # after successful task creation
         return redirect(url_for("views.dashboard"))
 
     # If request = GET, render empty create_task form
     return render_template("create_task.html")
 
-# Task editing route (GET/POST): Allows users to edit an existing task (requires login)
+
+# Task editing route (GET/POST): Allows users
+# to edit an existing task (requires login)
 @views.route("/edit_task/<int:task_id>", methods=["GET", "POST"])
 @login_required
 def edit_task(task_id):
@@ -161,8 +174,8 @@ def edit_task(task_id):
 
         # converts str into datetime objects
         try:
-            start_date= datetime.fromisoformat(start_date_str)
-            due_date= datetime.fromisoformat(due_date_str)
+            start_date = datetime.fromisoformat(start_date_str)
+            due_date = datetime.fromisoformat(due_date_str)
         except ValueError:
             flash("Invalid date format.", "danger")
             return render_template("edit_task.html", task=task)
@@ -192,6 +205,7 @@ def edit_task(task_id):
 
     # Render the task editing template, passing the task data to it (GET)
     return render_template("edit_task.html", task=task)
+
 
 # Task deletion route (POST): Handles task deletion (requires login)
 @views.route("/delete_task/<int:task_id>", methods=["POST"])
@@ -235,7 +249,7 @@ def request_holiday():
             new_holiday = Holiday(
                 start_date=start_date,
                 end_date=end_date,
-                is_approved=False, # Initial state is unapproved
+                is_approved=False,  # Initial state is unapproved
                 user_id=current_user.id
             )
 
@@ -243,11 +257,13 @@ def request_holiday():
             db.session.add(new_holiday)
             db.session.commit()
 
-            flash("Holiday request submitted! Please await approval from admin.", "success")
+            flash("Holiday request submitted! Please await approval\
+            from admin.", "success")
             return redirect(url_for("views.dashboard"))
 
         except ValueError:
-            flash("Invalid date format. Please use the correct format.", "danger")
+            flash("Invalid date format. Please use the\
+            correct format.", "danger")
             return redirect(url_for("views.request_holiday"))
 
     return render_template("request_holiday.html")
@@ -265,7 +281,7 @@ def edit_holiday(holiday_id):
     if request.method == "POST":
         start_date = request.form.get("start_date")
         end_date = request.form.get("end_date")
-                
+
         if not start_date or not end_date:
             flash("Start date and end date are required.", "danger")
             return render_template("edit_holiday.html", holiday=holiday)
@@ -277,12 +293,13 @@ def edit_holiday(holiday_id):
         holiday.start_date = start_date
         holiday.end_date = end_date
 
-        #reset approval back to pending when editing a holiday request, unless already pending
+        # reset approval back to pending when editing a holiday
+        # request, unless already pending
         holiday.is_approved = False
         holiday.is_declined = False
 
         flash("Request Updated and sent for approval!", "success")
-        
+
         db.session.commit()
         return redirect(url_for("views.dashboard"))
 
@@ -296,7 +313,8 @@ def delete_holiday(holiday_id):
     holiday = Holiday.query.get_or_404(holiday_id)
 
     if not current_user.is_admin and holiday.user_id != current_user.id:
-        flash("You are not authorized to delete this holiday request.", "danger")
+        flash("You are not authorized to delete this\
+        holiday request.", "danger")
         return redirect(url_for("views.dashboard"))
 
     # Delete the holiday from the database and commit the transaction
@@ -306,25 +324,31 @@ def delete_holiday(holiday_id):
     # Redirect back to the dashboard after deletion
     return redirect(url_for("views.dashboard"))
 
+
 @views.route("/approve_holiday", methods=["GET", "POST"])
 @login_required
 def approve_holiday():
     if request.method == "POST":
-        unapproved_holidays = Holiday.query.filter_by(is_approved=False, is_declined=False).all()
-
+        unapproved_holidays = (
+            Holiday.query.filter_by(is_approved=False, is_declined=False).all()
+            )
         for holiday in unapproved_holidays:
             holiday_action = request.form.get(f'holiday_action_{holiday.id}')
             if holiday_action == 'approve':
                 holiday.is_approved = True
-                holiday.is_declined = False 
+                holiday.is_declined = False
             elif holiday_action == 'decline':
                 holiday.is_approved = False
-                holiday.is_declined = True 
+                holiday.is_declined = True
 
             db.session.commit()
 
         flash("Holiday requests updated successfully.", "success")
         return redirect(url_for("views.dashboard"))
 
-    unapproved_holidays = Holiday.query.filter_by(is_approved=False, is_declined=False).all()
-    return render_template("approve_holiday.html", holidays=unapproved_holidays)
+    unapproved_holidays = (
+        Holiday.query.filter_by(is_approved=False, is_declined=False).all()
+        )
+    return render_template(
+        "approve_holiday.html", holidays=unapproved_holidays
+        )
