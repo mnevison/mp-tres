@@ -3,10 +3,10 @@ from flask_login import UserMixin
 from datetime import datetime
 from sqlalchemy import Enum
 
+
 class User(UserMixin, db.Model):
 
     __tablename__ = 'users'
-
 
     id = db.Column(db.Integer, primary_key=True)
     fname = db.Column(db.String(150), nullable=False)
@@ -14,7 +14,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(300), nullable=False, unique=True)
     password = db.Column(db.String(300), nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
-    is_active = db.Column(db.Boolean, default= True)
+    is_active = db.Column(db.Boolean, default=True)
     holidays = db.relationship('Holiday', backref='owner', lazy=True)
 
     @property
@@ -31,22 +31,26 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return f'<User {self.fname} {self.lname}>'
 
+
 class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200), nullable=False)
     description = db.Column(db.Text, nullable=True)
     status = db.Column(db.String(50), nullable=False, default="pending")
-    priority = db.Column(db.Enum('low', 'medium', 'high', name='priority_levels'), default='medium')
+    priority = db.Column(db.Enum(
+        'low', 'medium', 'high', name='priority_levels'
+        ), default='medium')
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, onupdate=datetime.utcnow)
-    start_date = db.Column(db.DateTime, nullable=True) 
+    start_date = db.Column(db.DateTime, nullable=True)
     due_date = db.Column(db.DateTime, nullable=True)
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     user = db.relationship('User', backref=db.backref('tasks', lazy=True))
-    
+
     def __repr__(self):
         return f'<Task {self.title} by User {self.user_id}>'
+
 
 class Holiday(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -57,6 +61,7 @@ class Holiday(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, onupdate=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    
+
     def __repr__(self):
-        return f"<UserHoliday {self.user_id} from {self.start_date} to {self.end_date}>"
+        return f"""<UserHoliday {self.user_id} from
+               {self.start_date} to {self.end_date}>"""
