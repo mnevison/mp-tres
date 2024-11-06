@@ -19,7 +19,11 @@ Link to deployed site: [Team Planner](https://nightsapp-mp3-95b6adbcde7b.herokua
   - [Typography](#typography)
   - [Imagery](#imagery)
   - [Wireframes](#wireframes)
-  - [Database Schema & User Journey](#database-schema--user-journey) -[User Journey](#user-journey)
+  - [Database Schema & User Journey](#database-schema--user-journey)
+
+    - [User Journey](#user-journey)
+
+    - [Database Schema](#database-schema)
 
 - [Features](#features)
 
@@ -269,10 +273,60 @@ The try/except block will take the string data of the dates and convert them int
 
 The if & length check works very much the same way. Comparing the datetime objects and throwing a validation error via flash if needed.
 
-**_At time of writing this, I didn't implement the re-rendering of this particular form.. Will update before the end!_**
-
 #### Edit Tasks
 
 ![edit-task](docs/readme/edit-task.png)
 
 I wanted to add "expected behavior" to this particular form - So as with the user registration page, the fields will pre-populate based on the given task the user is looking to edit.
+
+### Holidays - Main view
+
+![holidays-main](docs/readme/holiday-main.png)
+
+The calendar is where all of the user interaction with holiday objects occurs. "Holiday Request" is part of the authenticated navbar for all registered users, which will allow them to submit a holiday for approval. Once submitted, it will appear on the calendar within the chosen date range, showing as orange (pending). A full breakdown of the R.A.G system for holidays is outlined in the holiday request/edit forms.
+
+![holiday-request](docs/readme/holiday-request.png)
+
+As a user can request a holiday for any reason, the only requirements I've added are the start and end dates.
+
+![date-validation](docs/readme/date-validation.gif)
+
+I added some basic validation checks to the start & end dates to ensure the holiday didn't end before it started.
+
+**_For planning purposes, you CAN add a holiday that starts & ends in the past, as long as the start & end date are done correctly. Use case for something like this would be if someone went off sick, but decided to take the time off as holiday, rather than sick_**
+
+#### Holidays - Modal
+
+The holiday modal represents the main interactivity done on the holiday objects. A user can edit and delete requests via interacting with the specific request. The modal will also display the relevant content - in the case of a holiday that would be the start and end date.
+
+##### Edit Holiday
+
+![edit-holiday](docs/readme/edit-holiday.gif)
+
+Interacting with the object pops the model, and the edit button will sent the user to the edit_holiday page/route.
+
+##### Delete Holiday
+
+![delete-holiday](docs/readme/delete-holiday.gif)
+
+I added Sweetalerts2 to replace the default browser alerts to deal with deleting holidays (and tasks) through the modal view on the calendar.
+
+##### Holiday User Validation
+
+![user-validation-hols](docs/readme/holiday-validation.gif)
+
+If a user attempts to interact with a holiday not requested by themselves they'll trigger a warning alert - this validation has been added to the edit and delete routes.
+
+```
+if not current_user.is_admin and holiday.user_id != current_user.id:
+        flash("You are not authorized to delete this holiday request.", "danger")
+        return redirect(url_for("views.dashboard"))
+```
+
+**_Admins can delete/update holiday requests regardless of user access restrictions_**
+
+##### Resubmit Required
+
+![resub](docs/readme/resubmit.gif)
+
+This is a feature I wanted to add, just based off of personal experience dealing with peoples holiday shenanigans. When a request that has already been dealt with by an admin (approved/declined) is edited in any way, it then is returned to pending and will require re-reviewing by an admin. This is to stop people from changing the dates on authorized holidays to something else mainly.
