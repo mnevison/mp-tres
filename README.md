@@ -295,7 +295,7 @@ I added some basic validation checks to the start & end dates to ensure the holi
 
 **_For planning purposes, you CAN add a holiday that starts & ends in the past, as long as the start & end date are done correctly. Use case for something like this would be if someone went off sick, but decided to take the time off as holiday, rather than sick_**
 
-#### Holidays - Modal
+### Holidays - Modal
 
 The holiday modal represents the main interactivity done on the holiday objects. A user can edit and delete requests via interacting with the specific request. The modal will also display the relevant content - in the case of a holiday that would be the start and end date.
 
@@ -342,3 +342,127 @@ This is the table that appears on the admin only route for Approve Holidays. How
 ![error-handlers](docs/readme/error-handler.png)
 
 I've added some customer error handlers for common errors (401, 404 and 500) to deal with them in a more elegant way that just crashing the app.
+
+---
+
+## Future Updates/Changes
+
+There are a number of changes/improvements I would make to the site/app that are outside of the scope of this project - IF my team do decide they would like to make use of the app, I would likely look to implement:
+
+- Push/Email notifications for Admins/Users for holiday submissions & approvals.
+- Giving Admin user the ability to create and assign tasks to specific users.
+- Add further authentication surrounding general users. Only allowing people with certain email addresses (my company) to register accounts.
+- Forgotten password/Password recovery.
+- User profiles
+- More accurate holiday tracking - our company gives holiday time in hours - allowing users to add there total hours of time off and deduct from the total when requests are made.
+
+### Accessibility
+
+I have been mindful during coding to ensure that the website is as accessible friendly as possible. This has been have achieved by:
+
+- Using semantic HTML.
+- Using descriptive alt attributes on images on the site.
+- Providing information for screen readers where there are icons used and no text.
+- Ensuring that there is a sufficient colour contrast throughout the site.
+
+---
+
+## How It Was Built
+
+### Languages Used
+
+- HTML
+- CSS
+- JavaScript
+- Python
+
+### Databases
+
+- [PostgresSQL](https://www.postgresql.org/) - Relational Database used to store all tables for the project.
+
+### Frameworks
+
+- [Flask](https://pypi.org/project/Flask/) - A micro framework for building websites in Python.
+
+### Libraries & Packages
+
+- [SweetAlert2](https://sweetalert2.github.io/) - Used to replace the default browser alerts.
+- [Bootstrap v5.3](https://getbootstrap.com/) - CSS framework.
+- [FullCalendar](https://fullcalendar.io/) - Calendar library.
+- [Flask-Login](https://flask-login.readthedocs.io/en/latest/) - Flask-Login is an extension for Flask that provides user session management, handling tasks like login, logout, and user authentication in web applications.
+- [SQLAlchemy](https://flask-sqlalchemy.readthedocs.io/en/stable/) - SQLAlchemy is a Python SQL toolkit and Object-Relational Mapping (ORM) library that simplifies database interaction by allowing developers to work with relational databases using Python objects.
+
+### Programs Used
+
+- [Pip](https://pypi.org/project/pip/) - Used for installing Python packages.
+- [Jinja](https://jinja.palletsprojects.com/en/stable/) - Templating engine for Python.
+- [Balsamiq](https://balsamiq.com/) - Used to create wireframes.
+- [Git](https://git-scm.com/) - Used for version control.
+- [Github](https://github.com/) - Used to save and store the file repository for the project.
+- [Chrome Dev Tools](https://developer.chrome.com/docs/devtools/) - Used to troubleshoot & test responsive behavior.
+- [Favicon.io](https://favicon.io/) - Used to generate the Favicons for the site.
+- [Am I Responsive?](https://ui.dev/amiresponsive) - Used to generate images of website over different viewports.
+- [Gitpod](https://www.gitpod.io/) - IDE used (Provided by Code Institute).
+- [ERD DB Designer](https://erd.dbdesigner.net/login) - Used to provide visual representation of my DB and relationships for Readme.
+
+---
+
+## Flask Blueprints
+
+In my project, I've utilized **Flask Blueprints** to logically organize and modularize the routes of my app. Blueprints allow me to separate the user authentication routes and the task/holiday-related routes into distinct sections. By organizing the code this way, it’s easier to maintain and scale the app as it grows. For example, all authentication-related routes are housed under the `auth` blueprint, and all task and holiday management routes are placed in the `views` blueprint. This way, my application is more manageable and follows a cleaner structure.
+
+---
+
+## Flask-Login
+
+For handling user authentication, I integrated **Flask-Login**, a powerful extension that simplifies session management. With Flask-Login, I can easily log users in, protect routes from unauthorized access, and manage the login state.
+
+- **User Registration**: During registration, users provide their email, first name, last name, and password. The password is securely hashed before being stored in the database.
+- **User Login**: On the login page, users can authenticate with their email and password. If the login credentials are correct, they are granted access to the dashboard.
+
+- **Logout**: The application also includes a logout route that allows users to end their session, securely logging them out.
+
+- **Protected Routes**: Certain routes, like the dashboard and task creation, are protected using `@login_required`. This ensures that only authenticated users can access them.
+
+---
+
+## Flask-SQLAlchemy & Database Models
+
+I’ve used **Flask-SQLAlchemy** to interact with a relational database. The database stores users, tasks, and holiday requests. The database models are organized as follows:
+
+- **User Model**: Stores user information such as their first name, last name, email, and password. It also tracks whether the user is an admin or not.
+
+- **Task Model**: Manages tasks assigned to each user, storing details like title, description, status, priority, and the associated start and due dates.
+
+- **Holiday Model**: Allows users to request holidays. It tracks the start and end dates of the holiday, along with approval or decline status.
+
+With Flask-SQLAlchemy, I can easily query and manipulate the database, ensuring smooth functionality for managing users, tasks, and holiday requests.
+
+---
+
+## Defensive Programming
+
+**Defensive programming** is implemented throughout the application to prevent unauthorized users from making changes to data they do not own. For example, in the task and holiday management routes, I check whether the logged-in user is the one who created the task or holiday request before allowing any edits or deletions.
+
+If a user tries to edit or delete a resource they don't own, a flash message is shown, informing them that they are not authorized to perform the action. Additionally, I’ve added a check for users with admin privileges, granting them access to all tasks and holiday requests, even if they didn't create them. This way, admins can manage all content across the application.
+
+---
+
+## Error Handling
+
+To improve the user experience and make the app more resilient, I implemented **custom error handling** for common HTTP errors like 404 (Page Not Found) and 500 (Internal Server Error). Using a custom blueprint for error handling, I can customize how different errors are displayed to the user. This makes the application more user-friendly by showing specific messages and guidance when an error occurs.
+
+For instance:
+
+- A **404 error** redirects users to a custom page with a helpful message instead of a generic browser error page.
+- A **500 error** displays a message indicating an internal server problem, while logging the error for future debugging.
+
+---
+
+## Task and Holiday Management
+
+The core of the app revolves around managing **tasks** and **holiday requests**:
+
+- **Task Management**: Users can create, edit, and delete tasks. Tasks have various attributes, such as title, description, status, priority, start date, and due date. Additionally, I’ve implemented pagination for the tasks displayed on the dashboard, ensuring that users can navigate through their tasks efficiently.
+
+- **Holiday Requests**: Users can request holidays by specifying the start and end dates. Admins are able to approve or decline these holiday requests. The app ensures that holidays cannot be requested with invalid dates, and it includes checks to ensure that the start date is before the end date.
