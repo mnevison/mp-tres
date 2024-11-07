@@ -34,7 +34,7 @@ Link to deployed site: [Team Planner](https://nightsapp-mp3-95b6adbcde7b.herokua
   - [Login Page](/docs/testing/w3c%20-%20html/w3c-login.png) - 1 error. The error is related to a bootstrap class added on for styling purposes. I'm happy to let this error sit.
   - [Register](/docs/testing/w3c%20-%20html/w3c-register.png) - No errors.
   - [Dashboard](/docs/testing/w3c%20-%20html/w3c-dashboard.png) - No errors. Warnings are from elements that are dynamically rendered, so may sometimes appear empty.
-  - [Create Task](/docs/testing/w3c%20-%20html/w3c-createtask.png) - Corrected the initial errors I was getting regarding the <options> tag. I needed to add a placeholder before my own custom ones. No errors now.
+  - [Create Task](/docs/testing/w3c%20-%20html/w3c-createtask.png) - Corrected the initial errors I was getting regarding the `<options>` tag. I needed to add a placeholder before my own custom ones. No errors now.
   - [Edit Task](/docs/testing/w3c%20-%20html/w3c-edittask.png) - Corrected the initial errors I was getting regarding the <options> tag. I needed to add a placeholder before my own custom ones. No errors now.
   - [Holiday Request](docs/testing/w3c%20-%20html/w3c-holidayrequest.png) - No errors.
   - [Edit Holiday](/docs/testing/w3c%20-%20html/w3c-editholiday.png) - No errors.
