@@ -186,6 +186,12 @@ The site in total contains 9 pages:
 
 ---
 
+### Site Logo/Heading
+
+![site-logo](docs/readme/site-logo.png)
+
+I made the conscious decision with the site logo to remove the `href=" "` from it - It didn't make sense to have it for this particular application as "normally" it routes you to your homepage/main page. For me, this is wrapped in authentication, so first time visitors might click it and get an unexpected outcome. I have added plenty of ways for the user to navigate around the site and get back to the homescreen/main page which I feel are more appropriate in the form of close/cancel buttons within each section a user would be looking to go or interact with. You will see examples of that when I describe the features further down the page.
+
 ### Home/Login Page
 
 ![home-page](docs/readme/home-page.png)
@@ -356,7 +362,7 @@ There are a number of changes/improvements I would make to the site/app that are
 - Forgotten password/Password recovery.
 - User profiles
 - More accurate holiday tracking - our company gives holiday time in hours - allowing users to add there total hours of time off and deduct from the total when requests are made.
-- As the amount of holidays on the calendar grows, it might be worth considering the impact on site performance and render them in blocks - 3 months at a time? Or just render the month being displayed currently. 
+- As the amount of holidays on the calendar grows, it might be worth considering the impact on site performance and render them in blocks - 3 months at a time? Or just render the month being displayed currently.
 
 ### Accessibility
 
