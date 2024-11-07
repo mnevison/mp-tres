@@ -21,7 +21,7 @@ Link to deployed site: [Team Planner](https://nightsapp-mp3-95b6adbcde7b.herokua
   - [Testing User Stories](#testing-user-stories)
   - [Full Testing](#full-testing)
 
-- [BUGS]
+- [BUGS](#bugs)
 
   ***
 
