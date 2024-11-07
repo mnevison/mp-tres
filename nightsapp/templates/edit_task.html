@@ -1,4 +1,4 @@
-{% extends "base.html" %} {% block title %} New Task {% endblock %} {% block
+{% extends "base.html" %} {% block title %} Update Task {% endblock %} {% block
 content %}
 
 <h1 class="text-center mt-2">Update Task</h1>
@@ -32,6 +32,7 @@ content %}
   <div class="mb-3">
     <label for="priority" class="form-label">Priority</label>
     <select class="form-select" id="priority" name="priority" required>
+        <option value="" disabled>Select a priority</option>
         <option value="low" {% if task.priority == "low" %} selected {% endif %}>Low</option>
         <option value="medium" {% if task.priority == "medium" %}selected{% endif %}>Medium</option>
         <option value="high" {% if task.priority == "high" %}selected{% endif %}>High</option>
@@ -65,6 +66,7 @@ content %}
   <div class="mb-3">
     <label for="status" class="form-label">Status</label>
     <select class="form-select" id="status" name="status" required>
+      <option value="" disabled>Select a priority</option>
       <option value="pending" {% if task.status == "pending" %} selected {% endif %}>Pending</option>
       <option value="in-progress" {% if task.status == "in-progress" %} selected {% endif %}>In Progress</option>
       <option value="completed" {% if task.status == "completed" %} selected {% endif %}>Completed</option>
