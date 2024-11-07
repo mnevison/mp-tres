@@ -250,3 +250,5 @@ Link to deployed site: [Team Planner](https://nightsapp-mp3-95b6adbcde7b.herokua
 As of right now, the site has no known bugs.
 
 I didn't really experience any "bugs" during development - I experienced more "user error", which was typically solved using the flask default debugging tool.
+
+My main initial "headache" was related to the Database side of the project. Getting it off of the ground was a chore, but this was an error of my own making as I was trying to use 2 different projects that were very different as helpers - Credited in the README.md
