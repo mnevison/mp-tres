@@ -356,6 +356,7 @@ There are a number of changes/improvements I would make to the site/app that are
 - Forgotten password/Password recovery.
 - User profiles
 - More accurate holiday tracking - our company gives holiday time in hours - allowing users to add there total hours of time off and deduct from the total when requests are made.
+- As the amount of holidays on the calendar grows, it might be worth considering the impact on site performance and render them in blocks - 3 months at a time? Or just render the month being displayed currently. 
 
 ### Accessibility
 

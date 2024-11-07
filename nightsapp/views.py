@@ -49,8 +49,13 @@ def dashboard():
     total_pages = ceil(total_tasks / per_page)
 
     # Only retrieve the tasks needed for the current page
-    tasks = task_query.order_by(Task.due_date).offset((page
-                        - 1) * per_page).limit(per_page).all()
+    tasks = (
+    task_query
+    .order_by(Task.due_date)
+    .offset((page - 1) * per_page)
+    .limit(per_page)
+    .all()
+)
 
     task_events = [
         {
