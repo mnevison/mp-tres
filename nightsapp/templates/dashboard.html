@@ -1,28 +1,35 @@
 {% extends "base.html" %} {% block title %}Dashboard{% endblock %} {% block
 content %}
 
+<!-- Button row for task creation and log out -->
 <div class="row">
   <div class="col-6 text-start mt-2">
+    <!-- Link to create a new task -->
     <a href="{{ url_for('views.task_form') }}" class="btn btn-primary"
       >New Task</a
     >
   </div>
   <div class="col-6 text-end mt-2">
+    <!-- Link to log out -->
     <a href="{{ url_for('auth.logout') }}" class="btn btn-primary">Log Out</a>
   </div>
 </div>
 
+<!-- Section for displaying tasks -->
 <div class="row">
   <div class="col-lg-6">
     <h2 class="mt-4">Your Tasks</h2>
     <ul class="list-group">
       {% for task in tasks %}
+      <!-- List item for each task -->
       <li class="list-group-item">
         <h5>{{ task.title }}</h5>
         <p>{{ task.description }}</p>
         <small>Priority: {{ task.priority }}</small><br />
         <small>Due Date: {{ task.due_date }}</small><br />
         <small>Status: {{ task.status }}</small>
+
+        <!-- Button to mark task as completed (opens confirmation modal) -->
         <button
           type="button"
           class="btn btn-danger btn-sm float-end mx-2"
@@ -32,6 +39,8 @@ content %}
         >
           Complete
         </button>
+
+        <!-- Link to edit task -->
         <a
           href="{{ url_for('views.edit_task', task_id=task.id) }}"
           class="btn btn-success btn-sm float-end"
@@ -39,11 +48,12 @@ content %}
         >
       </li>
       {% else %}
+      <!-- Message when there are no tasks available -->
       <li class="list-group-item">No tasks available.</li>
       {% endfor %}
     </ul>
 
-    <!-- Pagination Controls -->
+    <!-- Pagination for navigating tasks -->
     <nav aria-label="Task pagination" class="mt-3">
       <ul class="pagination">
         {% if page > 1 %}
@@ -76,6 +86,7 @@ content %}
       </ul>
     </nav>
 
+    <!-- Modal for task details (opened on task click) -->
     <div
       class="modal fade"
       id="taskModal"
@@ -123,6 +134,7 @@ content %}
       </div>
     </div>
 
+    <!-- Modal for confirming task completion -->
     <div
       class="modal fade"
       id="confirmDeleteModal"
@@ -165,60 +177,11 @@ content %}
     </div>
   </div>
 
-  <div
-    class="modal fade"
-    id="holidayModal"
-    tabindex="-1"
-    aria-labelledby="holidayModalLabel"
-    aria-hidden="true"
-  >
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="holidayModalLabel">Holiday Details</h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          ></button>
-        </div>
-        <div class="modal-body">
-          <h6 id="holidayTitle"></h6>
-          <p>
-            <strong>Start Date:</strong> <span id="holidayStartDate"></span>
-          </p>
-          <p><strong>End Date:</strong> <span id="holidayEndDate"></span></p>
-          <p id="holidayStatus"></p>
-        </div>
-        <div class="modal-footer">
-          <a href="#" id="editHolidayLink" class="btn btn-success"
-            >Edit Request</a
-          >
-          <form id="deleteHolidayForm" method="POST" class="d-inline">
-            <button
-              type="button"
-              id="deleteHolidayButton"
-              class="btn btn-danger"
-            >
-              <i class="bi bi-trash-fill"></i> Delete
-            </button>
-          </form>
-          <button
-            type="button"
-            class="btn btn-secondary"
-            data-bs-dismiss="modal"
-          >
-            Close
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
+  <!-- Calendar section (on the right) -->
   <div id="calendar" class="col-lg-6"></div>
 </div>
 
+<!-- Script to handle calendar and modal interactions -->
 <script>
   document.addEventListener('DOMContentLoaded', function() {
       let taskEvents = [
@@ -227,7 +190,6 @@ content %}
               title: "{{ task.title|escape }}",
               start: "{{ task.start_date.strftime('%Y-%m-%dT%H:%M:%S') }}",
               end: "{{ task.due_date.strftime('%Y-%m-%dT%H:%M:%S') }}",
-
               extendedProps: {
                   type: 'task',
                   description: "{{ task.description|escape }}",
@@ -271,13 +233,11 @@ content %}
           initialView: 'dayGridMonth',
           events: events,
           eventContent: function(arg) {
-
               return {
                   html: `${arg.event.title}`
               };
           },
           eventClick: function(info) {
-
             if (info.event.extendedProps.type === 'holiday') {
               document.getElementById('holidayModalLabel').innerText = info.event.title;
               document.getElementById('holidayStartDate').innerText = info.event.start ? info.event.start.toLocaleString() : "Not specified";
@@ -299,8 +259,7 @@ content %}
               let holidayModal = new bootstrap.Modal(document.getElementById('holidayModal'));
               holidayModal.show();
 
-
-             } else if (info.event.extendedProps.type === 'task'){
+            } else if (info.event.extendedProps.type === 'task'){
               document.getElementById('taskTitle').innerText = info.event.title;
               document.getElementById('taskStartDate').innerText = info.event.start ? info.event.start.toLocaleString() : "Not specified";
               document.getElementById('taskEndDate').innerText = info.event.end ? info.event.end.toLocaleString() : "Not specified";
@@ -311,7 +270,7 @@ content %}
 
               let taskModal = new bootstrap.Modal(document.getElementById('taskModal'));
               taskModal.show();
-             }
+            }
           }
       });
 
