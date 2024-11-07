@@ -31,7 +31,7 @@ Link to deployed site: [Team Planner](https://nightsapp-mp3-95b6adbcde7b.herokua
 
   - [Login Page](/docs/testing/w3c%20-%20html/w3c-login.png) - 1 error. The error is related to a bootstrap class added on for styling purposes. I'm happy to let this error sit.
   - [Register](/docs/testing/w3c%20-%20html/w3c-register.png) - No errors.
-  - [Dashboard](/docs/testing/w3c%20-%20html/w3c-dashboard.png) - No errors.
+  - [Dashboard](/docs/testing/w3c%20-%20html/w3c-dashboard.png) - No errors. Warnings are from elements that are dynamically rendered, so may sometimes appear empty.
   - [Create Task](/docs/testing/w3c%20-%20html/w3c-createtask.png) - Corrected the initial errors I was getting regarding the <options> tag. I needed to add a placeholder before my own custom ones. No errors now.
   - [Edit Task](/docs/testing/w3c%20-%20html/w3c-edittask.png) - Corrected the initial errors I was getting regarding the <options> tag. I needed to add a placeholder before my own custom ones. No errors now.
   - [Holiday Request](docs/testing/w3c%20-%20html/w3c-holidayrequest.png) - No errors.
@@ -128,3 +128,115 @@ Link to deployed site: [Team Planner](https://nightsapp-mp3-95b6adbcde7b.herokua
   #### Dashboard Mobile
 
   ![dashboard-mobile](/docs/testing/lighthouse/mobile/dashboard-mobile.png)
+
+---
+
+## Manual Testing
+
+### Testing User Stories
+
+**_First Time User Goals_**
+
+| Goal                                             |                 Test                 | Outcome                                           |
+| :----------------------------------------------- | :----------------------------------: | :------------------------------------------------ |
+| To be able to register for an account            |       Register for an account        | Successfully make a new account for the app       |
+| To be able to navigate around the site with ease | Click the navigation links & buttons | Routed to desired area of site                    |
+| Log out when I'm done                            |  Press "Logout" button on Dashboard  | I was logged out and returned to the login screen |
+
+**_Returning Visitor Goals_**
+
+| Goal                                                    |                  Test                  | Outcome                                                                                                                       |
+| :------------------------------------------------------ | :------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------- |
+| To view/add tasks for myself                            |              Added a task              | The task was added then displayed on the Dashboard view                                                                       |
+| To request/update/check the status of my holiday        |          Requested a holiday           | Holiday rendered within the calendar across chosen dates                                                                      |
+| Complete/update any tasks I've finished or need to move | Edited a task - Once edited, completed | The task updated - date ranges changed. Calendar view updated. Once completed, task was removed from the task view & calendar |
+
+### Full Testing
+
+#### Navbar Authentication
+
+![auth-nav](/docs/testing/full-testing/auth-nav.gif)
+
+#### Login
+
+![login-test](/docs/testing/full-testing/login-test.gif)
+
+#### Logout
+
+![logout-test](/docs/testing/full-testing/logout-test.gif)
+
+#### Register Nav Link
+
+![register-link](/docs/testing/full-testing/register-nav.gif)
+
+#### Register (Account Creation)
+
+![register-new-account](/docs/testing/full-testing/register-account-creation.gif)
+
+#### Register (Email Validation)
+
+![register-email](/docs/testing/full-testing/register-email-validation.gif)
+
+#### Registration Form Auto Fill
+
+![register-auto-fill](/docs/testing/full-testing/register-form-complete.gif)
+
+#### New Task Link/Button
+
+![new-task-link](/docs/testing/full-testing/new-task-link.gif)
+
+#### Create New Task
+
+![create-new-task](/docs/testing/full-testing/create-new-task.gif)
+
+#### Edit Task Link
+
+![edit-task-link](/docs/testing/full-testing/edit-task-link.gif)
+
+#### Edit Task
+
+![edit-task](/docs/testing/full-testing/edit-task.gif)
+
+#### Complete/Delete Task
+
+![task-delete](/docs/testing/full-testing/task-delete.gif)
+
+#### Task Edit (Modal)
+
+![task-modal-edit](/docs/testing/full-testing/task-modal-edit.gif)
+
+#### Task Delete/Complete (Modal)
+
+![task-modal-delete](/docs/testing/full-testing/task-modal-delete.gif)
+
+#### Request Holiday Nav
+
+![request-holiday-link](/docs/testing/full-testing/request-holiday-link.gif)
+
+#### Request Holiday
+
+![request-holiday](/docs/testing/full-testing/request-holiday.gif)
+
+#### Holiday Edit/Update Link
+
+![holiday-edit-link](/docs/testing/full-testing/holiday-edit-link.gif)
+
+#### Holiday Update
+
+![holiday-edit-update](/docs/testing/full-testing/holiday-edit-update.gif)
+
+#### Holiday Delete
+
+![delete-holiday](/docs/testing/full-testing/delete-holiday.gif)
+
+#### Holiday Authentication
+
+![holiday-auth](/docs/testing/full-testing/holiday-auth.gif)
+
+#### Holiday Status Update
+
+![holiday-status-update](/docs/testing/full-testing/holiday-status-update.gif)
+
+#### Admin Holiday Approval
+
+![admin-approval](/docs/testing/full-testing/admin-holiday-approve.gif)
