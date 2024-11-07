@@ -15,19 +15,20 @@ views = Blueprint('views', __name__)
 @views.route("/dashboard", methods=["GET"])
 @login_required
 def dashboard():
-
+    # Retrieve all holiday requests from the database
     holidays = Holiday.query.all()
 
-    holiday_events = []
+    holiday_events = []  # List to store formatted holiday events for the calendar
     for holiday in holidays:
+        # Determine the status and color based on approval status
         status = (
             'Approved' if holiday.is_approved else
             'Declined' if holiday.is_declined else 'Pending'
-            )
+        )
         color = (
             'green' if holiday.is_approved else
             'red' if holiday.is_declined else 'orange'
-            )
+        )
         holiday_events.append({
             'title': f"{holiday.owner.fname} {holiday.owner.lname} - {status}",
             'start': holiday.start_date.isoformat(),
@@ -43,20 +44,21 @@ def dashboard():
     page = request.args.get('page', 1, type=int)
     per_page = 3
 
-    # Retrieve tasks for the current user with pagination
+    # Query tasks for the current user with pagination
     task_query = Task.query.filter_by(user_id=current_user.id)
     total_tasks = task_query.count()
     total_pages = ceil(total_tasks / per_page)
 
-    # Only retrieve the tasks needed for the current page
+    # Retrieve the tasks for the current page
     tasks = (
-    task_query
-    .order_by(Task.due_date)
-    .offset((page - 1) * per_page)
-    .limit(per_page)
-    .all()
-)
+        task_query
+        .order_by(Task.due_date)
+        .offset((page - 1) * per_page)
+        .limit(per_page)
+        .all()
+    )
 
+    # Prepare task events for calendar display
     task_events = [
         {
             'title': task.title,
@@ -69,7 +71,8 @@ def dashboard():
         }
         for task in tasks
     ]
-    # Render the dashboard template and pass the tasks to it
+
+    # Render the dashboard template and pass tasks, holidays, and events
     return render_template("dashboard.html",
                            tasks=tasks, holidays=holidays,
                            holiday_events=holiday_events,
@@ -91,9 +94,7 @@ def task_form():
 @views.route("/create_task", methods=["POST", "GET"])
 @login_required
 def create_task():
-
     if request.method == "POST":
-
         # Retrieve form data submitted by the user
         title = request.form.get("title")
         description = request.form.get("description")
@@ -102,6 +103,7 @@ def create_task():
         due_date_str = request.form.get("due_date")
         status = request.form.get("status")
 
+        # Convert date strings into datetime objects
         try:
             start_date = datetime.fromisoformat(start_date_str)
             due_date = datetime.fromisoformat(due_date_str)
@@ -115,7 +117,7 @@ def create_task():
                                    due_date=due_date_str,
                                    status=status)
 
-        # validation that due is not before start date
+        # Validate that due date is not before start date
         if due_date < start_date:
             flash("Due date cannot be before the start date.", "danger")
             return render_template("create_task.html",
@@ -126,7 +128,7 @@ def create_task():
                                    due_date=due_date_str,
                                    status=status)
 
-        # Check if the title is within the "safe" limit of 200 characters
+        # Check if the title length is within limit
         if len(title) > 199:
             flash("Title is too long. Maximum of 200 characters.", "danger")
             return render_template("create_task.html",
@@ -152,16 +154,15 @@ def create_task():
         db.session.add(new_task)
         db.session.commit()
 
-        # Redirect the user back to the dashboard
-        # after successful task creation
+        # Redirect the user back to the dashboard after successful task creation
         return redirect(url_for("views.dashboard"))
 
-    # If request = GET, render empty create_task form
+    # If request is GET, render empty create_task form
     return render_template("create_task.html")
 
 
-# Task editing route (GET/POST): Allows users
-# to edit an existing task (requires login)
+# Task editing route 
+# (GET/POST): Allows users to edit an existing task (requires login)
 @views.route("/edit_task/<int:task_id>", methods=["GET", "POST"])
 @login_required
 def edit_task(task_id):
@@ -177,23 +178,25 @@ def edit_task(task_id):
         due_date_str = request.form["due_date"]
         status = request.form["status"]
 
-        # converts str into datetime objects
+        # Convert strings into datetime objects
         try:
             start_date = datetime.fromisoformat(start_date_str)
             due_date = datetime.fromisoformat(due_date_str)
         except ValueError:
             flash("Invalid date format.", "danger")
             return render_template("edit_task.html", task=task)
-        # validates due date isn't before start date
+
+        # Validate due date is not before start date
         if due_date < start_date:
             flash("Due date cannot be before the start date.", "danger")
             return render_template("edit_task.html", task=task)
 
-        # Check if the title is within the "safe" limit of 200 characters
+        # Check if the title length is within limit
         if len(title) > 199:
             flash("Title is too long. Maximum of 200 characters.", "danger")
             return render_template("edit_task.html", task=task)
 
+        # Update task attributes
         task.title = title
         task.description = description
         task.priority = priority
@@ -228,6 +231,7 @@ def delete_task(task_id):
     return redirect(url_for("views.dashboard"))
 
 
+# Route to request a holiday (GET/POST): Allows users to create holiday requests
 @views.route("/request_holiday", methods=["GET", "POST"])
 @login_required
 def request_holiday():
@@ -267,77 +271,91 @@ def request_holiday():
             return redirect(url_for("views.dashboard"))
 
         except ValueError:
-            flash("Invalid date format. Please use the\
-            correct format.", "danger")
+            flash("Invalid date format. Please use the correct format.", "danger")
             return redirect(url_for("views.request_holiday"))
 
+    # Render the holiday request form if method is GET
     return render_template("request_holiday.html")
 
 
+# Route to edit a holiday 
+# (GET/POST): Allows users or admins to modify holiday requests
 @views.route("/edit_holiday/<int:holiday_id>", methods=["GET", "POST"])
 @login_required
 def edit_holiday(holiday_id):
+    # Retrieve the holiday request by its ID
     holiday = Holiday.query.get_or_404(holiday_id)
 
+    # Check authorization: Admins or the request's owner can edit
     if not current_user.is_admin and holiday.user_id != current_user.id:
         flash("You are not authorized to edit this holiday request", "danger")
         return redirect(url_for("views.dashboard"))
 
     if request.method == "POST":
+        # Get updated start and end dates from form
         start_date = request.form.get("start_date")
         end_date = request.form.get("end_date")
 
+        # Validate presence of both dates
         if not start_date or not end_date:
             flash("Start date and end date are required.", "danger")
             return render_template("edit_holiday.html", holiday=holiday)
 
+        # Validate that start date is before end date
         if start_date >= end_date:
             flash("Start date must be before end date.", "danger")
             return render_template("edit_holiday.html", holiday=holiday)
 
+        # Update holiday request with new dates
         holiday.start_date = start_date
         holiday.end_date = end_date
 
-        # reset approval back to pending when editing a holiday
-        # request, unless already pending
+        # Reset approval status to pending after editing
         holiday.is_approved = False
         holiday.is_declined = False
 
+        # Notify user and commit changes
         flash("Request Updated and sent for approval!", "success")
-
         db.session.commit()
         return redirect(url_for("views.dashboard"))
 
+    # Render edit form if method is GET
     return render_template("edit_holiday.html", holiday=holiday)
 
 
+# Route to delete a holiday request
+# (POST): Allows users or admins to delete holiday requests
 @views.route("/delete_holiday/<int:holiday_id>", methods=["POST"])
 @login_required
 def delete_holiday(holiday_id):
-    # Retrieve the holiday by its ID, or return a 404 if not found
+    # Retrieve the holiday request by its ID
     holiday = Holiday.query.get_or_404(holiday_id)
 
+    # Check authorization for deletion
     if not current_user.is_admin and holiday.user_id != current_user.id:
-        flash("You are not authorized to delete this\
-        holiday request.", "danger")
+        flash("You are not authorized to delete this holiday request.", "danger")
         return redirect(url_for("views.dashboard"))
 
-    # Delete the holiday from the database and commit the transaction
+    # Delete the holiday request from the database
     db.session.delete(holiday)
     db.session.commit()
     flash("Holiday request deleted successfully!", "success")
-    # Redirect back to the dashboard after deletion
+
+    # Redirect back to dashboard after deletion
     return redirect(url_for("views.dashboard"))
 
 
+# Route for admin to approve or decline holiday requests (GET/POST)
 @views.route("/approve_holiday", methods=["GET", "POST"])
 @login_required
 def approve_holiday():
     if request.method == "POST":
+        # Fetch all unapproved holidays
         unapproved_holidays = (
             Holiday.query.filter_by(is_approved=False, is_declined=False).all()
-            )
+        )
         for holiday in unapproved_holidays:
+            # Check the action (approve/decline) from the form
             holiday_action = request.form.get(f'holiday_action_{holiday.id}')
             if holiday_action == 'approve':
                 holiday.is_approved = True
@@ -346,14 +364,16 @@ def approve_holiday():
                 holiday.is_approved = False
                 holiday.is_declined = True
 
+            # Commit the changes for each holiday
             db.session.commit()
 
         flash("Holiday requests updated successfully.", "success")
         return redirect(url_for("views.dashboard"))
 
+    # If GET, display unapproved holidays for admin review
     unapproved_holidays = (
         Holiday.query.filter_by(is_approved=False, is_declined=False).all()
-        )
+    )
     return render_template(
         "approve_holiday.html", holidays=unapproved_holidays
-        )
+    )

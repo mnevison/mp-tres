@@ -5,17 +5,21 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
 from flask_login import login_user, login_required, logout_user, current_user
 
+# Define the Blueprint for authentication-related routes
 auth = Blueprint('auth', __name__)
 
 
 @auth.route("/", methods=["GET", "POST"])
 def login():
+    # Handle user login
     if request.method == "POST":
         email = request.form.get("email")
         password = request.form.get("password")
-
+        
+        # Verify if user exists
         user = User.query.filter_by(email=email).first()
         if user:
+            # Check password validity
             if check_password_hash(user.password, password):    
                 flash(
                     "Welcome back, {}!".format(user.fname), category="success"
@@ -27,8 +31,10 @@ def login():
 
             return render_template("login.html", email=email)
 
+        # Render login form if user not found
         return render_template("login.html", user=current_user)
 
+    # Render the login page for GET requests    
     return render_template("login.html")
 
 
@@ -86,6 +92,7 @@ def register():
 
 @auth.route("/logout")
 def logout():
+    # Log the user out and redirect to the login page
     logout_user()
     flash("You've been successfully logged out", category="success")
     return redirect(url_for("auth.login"))
