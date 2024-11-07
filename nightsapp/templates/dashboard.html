@@ -20,15 +20,14 @@ content %}
   <div class="col-lg-6">
     <h2 class="mt-4">Your Tasks</h2>
     <ul class="list-group">
-      {% for task in tasks %}
       <!-- List item for each task -->
+      {% for task in tasks %}
       <li class="list-group-item">
         <h5>{{ task.title }}</h5>
         <p>{{ task.description }}</p>
         <small>Priority: {{ task.priority }}</small><br />
         <small>Due Date: {{ task.due_date }}</small><br />
         <small>Status: {{ task.status }}</small>
-
         <!-- Button to mark task as completed (opens confirmation modal) -->
         <button
           type="button"
@@ -39,7 +38,6 @@ content %}
         >
           Complete
         </button>
-
         <!-- Link to edit task -->
         <a
           href="{{ url_for('views.edit_task', task_id=task.id) }}"
@@ -53,7 +51,7 @@ content %}
       {% endfor %}
     </ul>
 
-    <!-- Pagination for navigating tasks -->
+    <!-- Pagination Controls for Tasks -->
     <nav aria-label="Task pagination" class="mt-3">
       <ul class="pagination">
         {% if page > 1 %}
@@ -177,11 +175,62 @@ content %}
     </div>
   </div>
 
+  <!-- Holiday interaction Modal (Edit/Delete)-->
+  <div
+    class="modal fade"
+    id="holidayModal"
+    tabindex="-1"
+    aria-labelledby="holidayModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="holidayModalLabel">Holiday Details</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <h6 id="holidayTitle"></h6>
+          <p>
+            <strong>Start Date:</strong> <span id="holidayStartDate"></span>
+          </p>
+          <p><strong>End Date:</strong> <span id="holidayEndDate"></span></p>
+          <p id="holidayStatus"></p>
+        </div>
+        <div class="modal-footer">
+          <a href="#" id="editHolidayLink" class="btn btn-success"
+            >Edit Request</a
+          >
+          <form id="deleteHolidayForm" method="POST" class="d-inline">
+            <button
+              type="button"
+              id="deleteHolidayButton"
+              class="btn btn-danger"
+            >
+              <i class="bi bi-trash-fill"></i> Delete
+            </button>
+          </form>
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Calendar section (on the right) -->
   <div id="calendar" class="col-lg-6"></div>
 </div>
 
-<!-- Script to handle calendar and modal interactions -->
 <script>
   document.addEventListener('DOMContentLoaded', function() {
       let taskEvents = [
