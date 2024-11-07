@@ -155,91 +155,137 @@ Link to deployed site: [Team Planner](https://nightsapp-mp3-95b6adbcde7b.herokua
 
 ### Full Testing
 
+**_Heading above each file represents the feature that is being tested. Text above would be the expected outcome. GIF will show the test performed and the outcome of the test_**
+
 #### Navbar Authentication
+
+**_Unauthenticated users only see registration link - Once validated, the other links appear_**
 
 ![auth-nav](/docs/testing/full-testing/auth-nav.gif)
 
 #### Login
 
+**_User is logged in and sent to the dashboard_**
+
 ![login-test](/docs/testing/full-testing/login-test.gif)
 
 #### Logout
+
+**_User is logged out and redirected to the login screen_**
 
 ![logout-test](/docs/testing/full-testing/logout-test.gif)
 
 #### Register Nav Link
 
+**_Opens registration page_**
+
 ![register-link](/docs/testing/full-testing/register-nav.gif)
 
 #### Register (Account Creation)
+
+**_Upon registering the new user will be given access and redirected to the dashboard_**
 
 ![register-new-account](/docs/testing/full-testing/register-account-creation.gif)
 
 #### Register (Email Validation)
 
+**_If an email is already in use on the database, an error will be flashed to advise the user_**
+
 ![register-email](/docs/testing/full-testing/register-email-validation.gif)
 
 #### Registration Form Auto Fill
+
+**_If any validation checks fail upon submission, the form data will be re-input automatically_**
 
 ![register-auto-fill](/docs/testing/full-testing/register-form-complete.gif)
 
 #### New Task Link/Button
 
+**_Directs user to the New Task form_**
+
 ![new-task-link](/docs/testing/full-testing/new-task-link.gif)
 
 #### Create New Task
+
+**_When all fields are filled out correctly, the task is created and rendered on the dashboard & the calendar_**
 
 ![create-new-task](/docs/testing/full-testing/create-new-task.gif)
 
 #### Edit Task Link
 
+**_Will direct user to the desired task they want to edit with all fields populated with the original task information_**
+
 ![edit-task-link](/docs/testing/full-testing/edit-task-link.gif)
 
 #### Edit Task
+
+**_The user can alter the task details and update the task being rendered on the dashboard & stored in the database_**
 
 ![edit-task](/docs/testing/full-testing/edit-task.gif)
 
 #### Complete/Delete Task
 
+**_Upon confirmation that they want to complete/delete the task, the data is removed from the site & database_**
+
 ![task-delete](/docs/testing/full-testing/task-delete.gif)
 
 #### Task Edit (Modal)
+
+**_User can interact with a task on the calendar and navigate to the edit page via the pop-up modal_**
 
 ![task-modal-edit](/docs/testing/full-testing/task-modal-edit.gif)
 
 #### Task Delete/Complete (Modal)
 
+**_User can interact with a task on the calendar and choose to complete/delete it via the pop-up modal_**
+
 ![task-modal-delete](/docs/testing/full-testing/task-modal-delete.gif)
 
 #### Request Holiday Nav
+
+**_Users are able to navigate to the holiday request page_**
 
 ![request-holiday-link](/docs/testing/full-testing/request-holiday-link.gif)
 
 #### Request Holiday
 
+**_Users are able to request a holiday for there desired time period_**
+
 ![request-holiday](/docs/testing/full-testing/request-holiday.gif)
 
 #### Holiday Edit/Update Link
+
+**_Users are able to interact with the holiday object on the calendar and navigate to the edit page_**
 
 ![holiday-edit-link](/docs/testing/full-testing/holiday-edit-link.gif)
 
 #### Holiday Update
 
+**_Users are able to update the dates requested_**
+
 ![holiday-edit-update](/docs/testing/full-testing/holiday-edit-update.gif)
 
 #### Holiday Delete
+
+**_Users are able to delete there existing holiday requests_**
 
 ![delete-holiday](/docs/testing/full-testing/delete-holiday.gif)
 
 #### Holiday Authentication
 
+**_Users are unable to interact with a holiday object that isn't related to them_**
+
 ![holiday-auth](/docs/testing/full-testing/holiday-auth.gif)
 
 #### Holiday Status Update
 
+**_When editing a holiday that is already approved or denied, the holiday needs to be checked over again by an admin - flash message to confirm_**
+
 ![holiday-status-update](/docs/testing/full-testing/holiday-status-update.gif)
 
 #### Admin Holiday Approval
+
+**_Admins are able to access the Approve Holiday route and approve/deny any pending requests_**
 
 ![admin-approval](/docs/testing/full-testing/admin-holiday-approve.gif)
 
